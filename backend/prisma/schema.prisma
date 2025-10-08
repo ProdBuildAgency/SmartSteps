@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model businesses {
+  id                   String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  owner_user_id        String?    @db.Uuid
+  name                 String
+  address              String?
+  city                 String?
+  state                String?
+  pincode              String?
+  phone                String?
+  num_preschoolers_pg  Int?
+  num_preschoolers_nur Int?
+  num_preschoolers_jkg Int?
+  num_preschoolers_skg Int?
+  fee_range_min        Int?
+  fee_range_max        Int?
+  created_at           DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime?  @default(now()) @db.Timestamptz(6)
+  users                users?     @relation(fields: [owner_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children             children[]
+}
+
+model categories {
+  id                 String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String
+  slug               String?      @unique
+  parent_category_id String?      @db.Uuid
+  created_at         DateTime?    @default(now()) @db.Timestamptz(6)
+  categories         categories?  @relation("categoriesTocategories", fields: [parent_category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_categories   categories[] @relation("categoriesTocategories")
+  products           products[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model children {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parent_user_id String?     @db.Uuid
+  business_id    String?     @db.Uuid
+  name           String
+  dob            DateTime?   @db.Date
+  gender         Int?        @db.SmallInt
+  current_group  Int?        @db.SmallInt
+  created_at     DateTime?   @default(now()) @db.Timestamptz(6)
+  businesses     businesses? @relation(fields: [business_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users          users?      @relation(fields: [parent_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model order_items {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order_id    String?   @db.Uuid
+  product_id  String?   @db.Uuid
+  quantity    Int?      @default(1)
+  unit_price  Int
+  total_price Int
+  orders      orders?   @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products    products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model orders {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id           String?       @db.Uuid
+  total_price       Int
+  currency          String?       @default("INR") @db.VarChar(3)
+  status            Int           @db.SmallInt
+  payment_provider  String?
+  payment_reference String?
+  shipping_address  Json?
+  delivery_estimate Json?
+  created_at        DateTime?     @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime?     @default(now()) @db.Timestamptz(6)
+  order_items       order_items[]
+  users             users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model product_assets {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  product_id String?   @db.Uuid
+  asset_type Int?      @db.SmallInt
+  url        String
+  sort_order Int?      @default(0)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model product_tags {
+  product_id String   @db.Uuid
+  tag_id     String   @db.Uuid
+  products   products @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tags       tags     @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([product_id, tag_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model products {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  category_id     String?          @db.Uuid
+  title           String
+  description     String?
+  price           Decimal          @default(0) @db.Decimal(18, 2)
+  currency        String?          @default("INR") @db.VarChar(3)
+  is_library_item Boolean?         @default(false)
+  status          Int?             @default(2) @db.SmallInt
+  sku             String?
+  created_at      DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime?        @default(now()) @db.Timestamptz(6)
+  order_items     order_items[]
+  product_assets  product_assets[]
+  product_tags    product_tags[]
+  categories      categories?      @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model tags {
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  slug         String?        @unique
+  created_at   DateTime?      @default(now()) @db.Timestamptz(6)
+  product_tags product_tags[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role          Int          @db.SmallInt
+  name          String?
+  email         String?      @unique
+  phone         String?      @unique
+  password_hash String?
+  created_at    DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime?    @default(now()) @db.Timestamptz(6)
+  businesses    businesses[]
+  children      children[]
+  orders        orders[]
+}
