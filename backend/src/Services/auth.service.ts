@@ -1,23 +1,26 @@
 import { prisma } from "../Configs/prisma";
-import { LoginRequest } from "../DTO/Requests";
-import { userSchema } from "../Schemas";
-import { LoginResponse } from '../DTO/Responses/login.response';
+import { BusinessRegisterRequest, LoginRequest, ResetPasswordRequest, UserRegisterRequest } from "../DTO/Requests";
+import { businessSchema } from "../Schemas";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { RegisterResponse, LoginResponse, ResetPasswordResponse } from "../DTO/Responses";
+import { Role } from "../Enums";
+import { AppError } from "../Utilities";
 
 export class AuthService {
-    static async login(data: LoginRequest) : Promise<LoginResponse> {
-        // validate data and convert to Schema
-        const validData = userSchema.pick({ email: true, password: true, phone: true}).parse(data);
+    static resetPassword(requestData: { role: Role; userId: string; password: string; }): ResetPasswordResponse | PromiseLike<ResetPasswordResponse> {
+        throw new Error("Method not implemented.");
+    }
+    static async login(data: LoginRequest): Promise<LoginResponse> {
+        const validData = data;
 
-        const isEmailPresent: boolean = !!validData?.email;
+        const isEmailPresent: boolean = data.emailOrPhone.includes("@");
 
-        // pass data to prisma to check in db
-        const user = await prisma.user.findUnique({
-            where: { [isEmailPresent ? 'email' : 'phone']: validData[isEmailPresent ? 'email' : 'phone']! }
+        const user = await prisma.users.findUnique({
+            where: { [isEmailPresent ? 'email' : 'phone']: validData.emailOrPhone }
         })
 
-        if (!user || !(await bcrypt.compare(validData.password, user.password))) {
+        if (!user || !(await bcrypt.compare(validData.password, user.password_hash))) {
             throw new Error('Invalid credentials');
         }
 
@@ -27,7 +30,6 @@ export class AuthService {
             { expiresIn: '7d' }
         );
 
-        // return data in response format
         const res: LoginResponse = {
             token,
             user: {
@@ -37,5 +39,112 @@ export class AuthService {
             }
         }
         return res;
+    }
+    static async register(data: UserRegisterRequest & Partial<BusinessRegisterRequest>): Promise<RegisterResponse> {
+        const validatedUser = data;
+
+        let validatedBusiness: any = null;
+        if (validatedUser.role === Role.BUSINESS) {
+            validatedBusiness = businessSchema.parse(data);
+        }
+
+        const existingUser = await prisma.users.findFirst({
+            where: {
+                OR: [
+                    { email: validatedUser.email },
+                    { phone: validatedUser.phoneNumber },
+                ],
+            },
+        });
+
+        if (existingUser) {
+            throw new AppError("User already exists with this email or phone", 409);
+        }
+
+        const hashedPassword = await bcrypt.hash(validatedUser.password, 10);
+
+        const newUser = await prisma.users.create({
+            data: {
+                role: validatedUser.role,
+                name: validatedUser.name,
+                email: validatedUser.email,
+                phone: validatedUser.phoneNumber,
+                password_hash: hashedPassword,
+            },
+        });
+
+        let newBusiness = null;
+        if (validatedUser.role === Role.BUSINESS && validatedBusiness) {
+            newBusiness = await prisma.businesses.create({
+                data: {
+                    owner_user_id: newUser.id,
+                    name: validatedUser.name,
+                    address: validatedBusiness.address,
+                    city: validatedBusiness.city,
+                    state: validatedBusiness.state,
+                    pincode: validatedBusiness.pincode,
+                    phone: validatedUser.phoneNumber,
+                    num_preschoolers_pg: validatedBusiness.preschoolersPg,
+                    num_preschoolers_nur: validatedBusiness.preschoolersNur,
+                    num_preschoolers_jkg: validatedBusiness.preschoolersJkg,
+                    num_preschoolers_skg: validatedBusiness.preschoolersSkg,
+                    fee_range_min: validatedBusiness.feeRangeMin,
+                    fee_range_max: validatedBusiness.feeRangeMax,
+                },
+            });
+        }
+
+        const token = jwt.sign(
+            { userId: newUser.id, role: newUser.role },
+            process.env.JWT_SECRET!,
+            { expiresIn: "100d" }
+        );
+
+        const response: RegisterResponse = {
+            token,
+            user: {
+                id: newUser.id,
+                role: newUser.role,
+                name: newUser.name ?? "",
+            },
+            business: newBusiness
+                ? {
+                    name: newBusiness.name,
+                }
+                : undefined,
+        };
+
+        return response;
+    }
+    async resetPassword(data: ResetPasswordRequest): Promise<ResetPasswordResponse> {
+        const user = await prisma.users.findUnique({
+            where: {
+                id: data.userId
+            }
+        })
+
+        if( !user ) {
+            throw new Error(`User doesn't Exists`);
+        }
+        
+        const newPassword = await bcrypt.hash(data.password, 10);
+        const updatedUser = await prisma.users.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                password_hash: newPassword
+            }
+        })
+        console.log("Updated User:", updatedUser);
+
+        const response: ResetPasswordResponse = {
+            user: {
+                id: updatedUser.id,
+                name: updatedUser.name,
+                role: updatedUser.role
+            }
+        }
+        return response;
     }
 }
