@@ -1,6 +1,5 @@
 import { prisma } from "../Configs/prisma";
 import { BusinessRegisterRequest, LoginRequest, ResetPasswordRequest, UserRegisterRequest } from "../DTO/Requests";
-import { businessSchema } from "../Schemas";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { RegisterResponse, LoginResponse, ResetPasswordResponse } from "../DTO/Responses";
@@ -8,9 +7,6 @@ import { Role } from "../Enums";
 import { AppError } from "../Utilities";
 
 export class AuthService {
-    static resetPassword(requestData: { role: Role; userId: string; password: string; }): ResetPasswordResponse | PromiseLike<ResetPasswordResponse> {
-        throw new Error("Method not implemented.");
-    }
     static async login(data: LoginRequest): Promise<LoginResponse> {
         const validData = data;
 
@@ -43,10 +39,7 @@ export class AuthService {
     static async register(data: UserRegisterRequest & Partial<BusinessRegisterRequest>): Promise<RegisterResponse> {
         const validatedUser = data;
 
-        let validatedBusiness: any = null;
-        if (validatedUser.role === Role.BUSINESS) {
-            validatedBusiness = businessSchema.parse(data);
-        }
+        const validatedBusiness = validatedUser.role === Role.BUSINESS ? data : null;
 
         const existingUser = await prisma.users.findFirst({
             where: {
@@ -116,7 +109,7 @@ export class AuthService {
 
         return response;
     }
-    async resetPassword(data: ResetPasswordRequest): Promise<ResetPasswordResponse> {
+    static async resetPassword(data: ResetPasswordRequest): Promise<ResetPasswordResponse> {
         const user = await prisma.users.findUnique({
             where: {
                 id: data.userId

@@ -37,7 +37,7 @@ export class AuthController {
         res.status(201).json(result);
     }
 
-    async resetPassword(req: Request, res: Response) {
+    static async resetPassword(req: Request, res: Response) {
         const parsed = ResetPasswordSchema.safeParse(req.body);
         
         if (!parsed.success) {
