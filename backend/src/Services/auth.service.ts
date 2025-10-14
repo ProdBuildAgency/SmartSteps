@@ -13,10 +13,16 @@ export class AuthService {
         const isEmailPresent: boolean = data.emailOrPhone.includes("@");
 
         const user = await prisma.users.findUnique({
-            where: { [isEmailPresent ? 'email' : 'phone']: validData.emailOrPhone }
+            where: isEmailPresent
+                ? { email: validData.emailOrPhone }
+                : { phone: validData.emailOrPhone }
         })
 
-        if (!user || !(await bcrypt.compare(validData.password, user.password_hash))) {
+        if (
+            !user ||
+            !user.password_hash ||
+            !(await bcrypt.compare(validData.password, user.password_hash))
+        ) {
             throw new Error('Invalid credentials');
         }
 
@@ -31,7 +37,7 @@ export class AuthService {
             user: {
                 id: user.id,
                 role: user.role,
-                name: user.name
+                name: user?.name ?? ""
             }
         }
         return res;
@@ -116,10 +122,10 @@ export class AuthService {
             }
         })
 
-        if( !user ) {
+        if (!user) {
             throw new Error(`User doesn't Exists`);
         }
-        
+
         const newPassword = await bcrypt.hash(data.password, 10);
         const updatedUser = await prisma.users.update({
             where: {
@@ -129,13 +135,11 @@ export class AuthService {
                 password_hash: newPassword
             }
         })
-        console.log("Updated User:", updatedUser);
-
         const response: ResetPasswordResponse = {
             user: {
                 id: updatedUser.id,
-                name: updatedUser.name,
-                role: updatedUser.role
+                role: updatedUser.role,
+                name: updatedUser?.name ?? ""
             }
         }
         return response;

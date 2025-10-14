@@ -7,8 +7,6 @@ interface AppError extends Error {
 }
 
 export function errorHandler(err: AppError, req: Request, res: Response, next: NextFunction) {
-  console.error("🔥 Error caught by middleware:", err);
-
   if (err instanceof ZodError) {
     return res.status(400).json({
       success: false,
