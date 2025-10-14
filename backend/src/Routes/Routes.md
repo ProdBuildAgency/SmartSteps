@@ -6,6 +6,7 @@ GET /auth/me
 User
 GET /users/:id
 PATCH /users/:id (any normal profile changes)
+GET /users/me (send auth token)
 
 Business
 POST /businesses (create profile during onboarding)
