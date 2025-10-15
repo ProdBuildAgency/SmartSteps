@@ -51,11 +51,10 @@ export class UserService {
             data: {
                 name: { set: typeof updateData.name === "string" ? updateData.name : (typeof user.name === "string" ? user.name : "") },
                 email: { set: typeof updateData.email === "string" ? updateData.email : (typeof user.email === "string" ? user.email : "") },
-                phone: { set: typeof updateData.phone === "string" ? updateData.phone : (typeof user.phone === "string" ? user.phone : "") },
+                phone: { set: typeof updateData.phoneNumber === "string" ? updateData.phoneNumber : (typeof user.phone === "string" ? user.phone : "") },
                 updated_at: new Date(),
             },
         });
-
 
         const response: UserResponse = {
             id: updatedUser.id,

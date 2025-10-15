@@ -1,15 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-export function verifyToken(req: Request, res: Response, next: NextFunction) {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "No token" });
+export interface AuthenticatedRequest extends Request {
+  user?: { id: string; role: number };
+}
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    (req as any).user = decoded;
-    next();
-  } catch {
-    res.status(401).json({ message: "Invalid token" });
+export class AuthMiddleWare {
+  static async verifyToken(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "No token" });
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+      (req as AuthenticatedRequest).user = {
+        id: decoded.userId || decoded.id,
+        role: decoded.role,
+      };
+      next();
+    } catch {
+      res.status(401).json({ message: "Invalid token" });
+    }
   }
 }
