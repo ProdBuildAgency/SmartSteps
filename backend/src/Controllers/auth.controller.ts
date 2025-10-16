@@ -14,7 +14,7 @@ export class AuthController {
         }
         const requestData: LoginRequest = parsed.data;
         const responseData: LoginResponse = await AuthService.login(requestData);
-        res.json(responseData);
+        res.status(200).json(responseData);
     }
 
     static async register(req: Request, res: Response) {

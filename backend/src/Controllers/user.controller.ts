@@ -6,13 +6,13 @@ import { UserService } from '../Services';
 import { AuthenticatedRequest } from '../Middlewares';
 
 export class UserController {
-  static async getUser(req: Request, res: Response) {
+  static async get(req: Request, res: Response) {
     const { id } = req.params;
-    const user: UserResponse = await UserService.getUser(id);
-    res.json(user);
+    const user: UserResponse = await UserService.get(id);
+    res.status(200).json(user);
   };
 
-  static async updateUser(req: Request, res: Response) {
+  static async update(req: Request, res: Response) {
     const { id } = req.params;
     const data = req.body;
     const parsed = UserSchema.safeParse(req.body);
@@ -22,8 +22,8 @@ export class UserController {
     }
 
     const requestData: UserRequest = parsed.data;
-    const user: UserResponse = await UserService.updateUser(id, requestData);
-    res.json(user);
+    const user: UserResponse = await UserService.update(id, requestData);
+    res.status(201).json(user);
   }
 
   static async authorize(req: AuthenticatedRequest, res: Response) {
@@ -32,7 +32,7 @@ export class UserController {
     }
 
     const id = req.user.id;
-    const user = await UserService.getUser(id);
+    const user = await UserService.get(id);
 
     return res.status(200).json(user);
   }

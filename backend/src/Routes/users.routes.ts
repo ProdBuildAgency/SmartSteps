@@ -4,8 +4,8 @@ import { AuthMiddleWare } from '../Middlewares';
 
 const router = express.Router();
 
-router.get('/:id', UserController.getUser);
-router.patch('/:id', UserController.updateUser);
+router.get('/:id', UserController.get);
+router.put('/:id', UserController.update);
 router.get('', AuthMiddleWare.verifyToken, UserController.authorize);
 
 export default router;

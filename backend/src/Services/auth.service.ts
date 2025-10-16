@@ -36,7 +36,7 @@ export class AuthService {
             token,
             user: {
                 id: user.id,
-                role: user.role,
+                role: Role[user.role],
                 name: user?.name ?? ""
             }
         }
@@ -103,7 +103,7 @@ export class AuthService {
             token,
             user: {
                 id: newUser.id,
-                role: newUser.role,
+                role: Role[newUser.role],
                 name: newUser.name ?? "",
             },
             business: newBusiness
@@ -138,7 +138,7 @@ export class AuthService {
         const response: ResetPasswordResponse = {
             user: {
                 id: updatedUser.id,
-                role: updatedUser.role,
+                role: Role[updatedUser.role],
                 name: updatedUser?.name ?? ""
             }
         }

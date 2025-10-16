@@ -4,7 +4,7 @@ import { UserResponse } from "../DTO/Responses";
 import { AppError } from "../Utilities";
 
 export class UserService {
-    static async getUser(data: string): Promise<UserResponse> {
+    static async get(data: string): Promise<UserResponse> {
         const user = await prisma.users.findUnique({
             where: {
                 id: data
@@ -26,7 +26,7 @@ export class UserService {
         }
         return response;
     }
-    static async updateUser(id: string, data: UserRequest): Promise<UserResponse> {
+    static async update(id: string, data: UserRequest): Promise<UserResponse> {
         const user = await prisma.users.findUnique({
             where: {
                 id: id
