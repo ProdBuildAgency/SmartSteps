@@ -7,3 +7,7 @@ export * from './category.request';
 export * from './tag.request';
 export * from './tagStatus.request';
 export * from './categoryStatus.request';
+export * from './product.request';
+export * from './productStatus.request';
+export * from './productTags.request';
+export * from './productUpdate.request';

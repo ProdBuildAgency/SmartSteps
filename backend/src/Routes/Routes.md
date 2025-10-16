@@ -41,7 +41,6 @@ GET    /products/:id
 POST   /products     (admin create product)
 PUT    /products/:id
 PATCH  /products/:id  (toggle status active/inactive)
-DELETE /products/:id
 
 Product Assets
 POST   /products/:id/assets  (upload to S3 → save record)

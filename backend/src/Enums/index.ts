@@ -5,3 +5,4 @@ export * from './orderstatus.enum';
 export * from './productstatus.enum';
 export * from './category.enum';
 export * from './tag.enum'
+export * from './assets.enum'
