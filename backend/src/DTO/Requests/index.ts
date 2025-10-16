@@ -11,3 +11,4 @@ export * from './product.request';
 export * from './productStatus.request';
 export * from './productTags.request';
 export * from './productUpdate.request';
+export * from  './productAssetsStatus.request'

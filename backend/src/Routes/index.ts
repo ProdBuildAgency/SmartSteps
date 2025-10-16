@@ -4,8 +4,8 @@ import userRoutes from './users.routes';
 import categoryRoutes from './category.routes';
 import tagRoutes from './tag.routes';
 import productRoutes from './product.routes'
-import productAssetsRoutes from './product.routes'
-import productTagsRoutes from './product.routes'
+import productAssetsRoutes from './productAssets.routes'
+import productTagsRoutes from './productTags.routes'
 
 const router = express.Router();
 router.use('/auth', authRoutes);

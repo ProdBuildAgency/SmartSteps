@@ -28,13 +28,13 @@ export class CategoryController {
     }
 
     static async get(req: Request, res: Response) {
-        const id = req.path.slice(1);
+        const { id } = req.params;
         const category: CategoryResponse = await CategoryService.get(id);
         return res.status(200).json(category);
     }
 
     static async update(req: AuthenticatedRequest, res: Response) {
-        const id = req.path.slice(1);
+        const { id } = req.params;
         const data = req.body;
         if (!req.user || !req.user.id || !req.user.role) {
             throw new AppError("Unauthorized access", 401);
@@ -54,7 +54,7 @@ export class CategoryController {
     }
 
     static async updateStatus(req: AuthenticatedRequest, res: Response) {
-        const id = req.path.slice(1);
+        const { id } = req.params;
         const categoryStatusParsed = CategoryStatusRequestSchema.safeParse(req.body);
         if (!categoryStatusParsed.success) {
             throw new AppError("Some Data is missing.", 400, categoryStatusParsed.error.issues)

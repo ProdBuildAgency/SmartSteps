@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { ProductAssetsController } from "../Controllers";
+import { ProductTagsController } from "../Controllers";
+import { AuthMiddleWare } from "../Middlewares";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
-router.post('', ProductAssetsController.link);
-router.delete('/:id', ProductAssetsController.unlink);
+router.post('', AuthMiddleWare.verifyToken, AuthMiddleWare.verifyAdmin, ProductTagsController.link);
+router.delete('/:tag_id', AuthMiddleWare.verifyToken, AuthMiddleWare.verifyAdmin, ProductTagsController.unlink);
 
 export default router;
