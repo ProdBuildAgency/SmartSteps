@@ -11,24 +11,35 @@
   },
   "keywords": [],
   "type": "commonjs",
-  "author": "",
+  "author": "Omkar Lande",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.911.0",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.7.0",
     "nodemon": "^3.1.10",
+    "prisma": "^6.17.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@prisma/client": "^6.17.0",
+    "@aws-sdk/s3-request-presigner": "^3.911.0",
+    "@prisma/client": "^6.17.1",
     "@supabase/supabase-js": "^2.74.0",
     "@types/cors": "^2.8.19",
+    "@types/uuid": "^10.0.0",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "uuid": "^13.0.0",
+    "zod": "^4.1.12"
   }
 }
