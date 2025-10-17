@@ -5,6 +5,7 @@ export interface ProductAssets {
   assets: {
     id: string;
     url: string;
-    asset_type: Asset
+    s3_key: string;
+    asset_type: string | Asset;
   }[];
 }

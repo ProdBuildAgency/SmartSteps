@@ -29,7 +29,7 @@ export class AuthService {
         const token = jwt.sign(
             { id: user.id, role: user.role },
             process.env.JWT_SECRET!,
-            { expiresIn: '7d' }
+            { expiresIn: '700d' }
         );
 
         const res: LoginResponse = {
@@ -96,7 +96,7 @@ export class AuthService {
         const token = jwt.sign(
             { userId: newUser.id, role: newUser.role },
             process.env.JWT_SECRET!,
-            { expiresIn: "100d" }
+            { expiresIn: "700d" }
         );
 
         const response: RegisterResponse = {

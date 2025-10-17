@@ -13,16 +13,16 @@ export class ProductAssetsService {
             const saved = await tx.product_assets.create({
                 data: {
                     product_id: productId,
+                    url: uploaded.url,
                     s3_key: uploaded.key,
-                    file_url: uploaded.url,
-                    asset_type: assetType ?? "IMAGE",
+                    asset_type: assetType ? Asset[assetType as keyof typeof Asset] : Asset.IMAGE,
                 },
                 select: { id: true, file_url: true, asset_type: true },
             });
 
             assetsData.push({
                 id: saved.id,
-                url: saved.file_url,
+                url: saved.url,
                 asset_type: saved.asset_type,
             });
         }
@@ -30,30 +30,35 @@ export class ProductAssetsService {
         return assetsData;
     }
 
-    static async uploadAssets(productId: string, files: Express.Multer.File[], assetType?: string): Promise<ProductAssets> {
+    static async uploadAssets(productId: string, assets: Express.Multer.File[], asset_type: number): Promise<ProductAssets> {
         const product = await prisma.products.findUnique({ where: { id: productId } });
         if (!product) {
             throw new AppError("Product not found", 404);
         }
 
-        const assetsData: { id: string; url: string; asset_type: Asset }[] = [];
+        const assetsData: ProductAssets["assets"] = [];
 
-        for (const file of files) {
+        for (const file of assets) {
             const uploaded = await S3Utils.upload(file, `products/${productId}`);
+            console.log("uplloaded: ", uploaded, assetsData, typeof(Number(asset_type)))
             const saved = await prisma.product_assets.create({
                 data: {
                     product_id: productId,
+                    url: uploaded.url,
                     s3_key: uploaded.key,
-                    file_url: uploaded.url,
-                    asset_type: assetType ?? 1,
+                    asset_type: Number(asset_type),
                 },
-                select: { id: true, url: true, asset_type: true },
+                select: { id: true, url: true, s3_key: true, asset_type: true },
             });
 
             assetsData.push({
                 id: saved.id,
                 url: saved.url,
-                asset_type: saved.asset_type as Asset,
+                s3_key: saved.s3_key ?? uploaded.key,
+                asset_type:
+                    typeof saved.asset_type === "number"
+                        ? Asset[saved.asset_type]
+                        : "IMAGE",
             });
         }
 
@@ -63,7 +68,11 @@ export class ProductAssetsService {
         };
     }
 
-    static async get(productId: string): Promise<ProductAssets> {
+    static async get(productId: string | null): Promise<ProductAssets> {
+        if (!productId) {
+            throw new AppError("Product ID is required", 400);
+        }
+
         const assets = await prisma.product_assets.findMany({
             where: { product_id: productId },
             select: { id: true, url: true, asset_type: true },
@@ -71,7 +80,7 @@ export class ProductAssetsService {
 
         return {
             product_id: productId,
-            assets: assets.map((a: any) => ({ id: a.id, url: a.file_url, asset_type: a.asset_type as Asset })),
+            assets: assets.map((a: any) => ({ id: a.id, url: a.url, s3_key: a.s3_key, asset_type: a.asset_type as Asset })),
         };
     }
 
@@ -91,7 +100,7 @@ export class ProductAssetsService {
             where: { id: assetId },
         });
 
-        if (!asset) {
+        if (!asset || !asset.s3_key) {
             throw new AppError("Asset not found", 404);
         }
 

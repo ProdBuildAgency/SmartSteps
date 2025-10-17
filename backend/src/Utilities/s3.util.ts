@@ -11,7 +11,11 @@ const BUCKET = process.env.AWS_BUCKET_NAME!;
 
 export class S3Utils {
   static async upload(file: Express.Multer.File, folder: string) {
-    const key = `${folder}/${uuidv4()}-${file.originalname}`;
+    const sanitizedFileName = file.originalname
+      .trim()
+      .replace(/\s+/g, "-")         
+      .replace(/[^a-zA-Z0-9.\-_]/g, ""); 
+    const key = `${folder}/${Date.now()}-${sanitizedFileName}`;
 
     const uploadParams = {
       Bucket: BUCKET,

@@ -5,7 +5,7 @@ import { ProductTagsService } from "../Services";
 import { AppError } from "../Utilities";
 
 export class ProductTagsController {
-        static async link(req: AuthenticatedRequest, res: Response) {
+    static async link(req: AuthenticatedRequest, res: Response) {
         const { id } = req.params;
         if (!id) {
             throw new AppError("Product ID is required", 400);

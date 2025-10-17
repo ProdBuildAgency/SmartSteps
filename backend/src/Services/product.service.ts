@@ -1,4 +1,3 @@
-import { title } from "process";
 import { prisma } from "../Configs/prisma";
 import { ProductRequest, ProductStatusRequest } from "../DTO/Requests";
 import { ProductResponse } from "../DTO/Responses";
@@ -71,24 +70,23 @@ export class ProductService {
     static async getAll(): Promise<ProductResponse[]> {
         const products = await prisma.products.findMany({
             include: {
-                category: { select: { id: true, name: true } },
-                product_tags: { include: { tag: { select: { id: true, name: true } } } },
+                categories: { select: { id: true, name: true } },
+                product_tags: { include: { tags: true } },
                 product_assets: { select: { id: true, url: true, asset_type: true } },
             },
         });
-
-        const response: ProductResponse[] = products.map((p: any) => ({
+        const response: ProductResponse[] = products.map((p) => ({
             id: p.id,
             title: p.title,
             description: p.description,
             price: p.price,
             currency: p.currency,
-            category: p.category,
-            status: ProductStatus[p.status],
+            category: p.categories,
+            status: p.status ? ProductStatus[p.status] : null,
             is_library_item: p.is_library_item,
             sku: p.sku,
-            tags: p.product_tags.map((pt: any) => pt.tag),
-            assets: p.product_assets.map((pa: any) => ({ id: pa.id, url: pa.url, asset_type: Asset[pa.asset_type] })),
+            tags: p.product_tags.map((pt) => pt.tags),
+            assets: p.product_assets.map((pa) => ({ id: pa.id, url: pa.url, asset_type: pa.asset_type ? Asset[pa.asset_type] : 'IMAGE' })),
             createdAt: p.created_at,
             updatedAt: p.updated_at,
         }));
@@ -99,9 +97,9 @@ export class ProductService {
         const product = await prisma.products.findUnique({
             where: { id },
             include: {
-                category: { select: { id: true, name: true } },
-                product_tags: { include: { tag: { select: { id: true, name: true } } } },
-                product_assets: { select: { id: true, file_url: true, asset_type: true } },
+                categories: { select: { id: true, name: true } },
+                product_tags: { include: { tags: true } },
+                product_assets: { select: { id: true, url: true, asset_type: true } },
             },
         });
 
@@ -115,12 +113,12 @@ export class ProductService {
             description: product.description,
             price: product.price,
             currency: product.currency,
-            category: product.category,
-            status: ProductStatus[product.status],
+            category: product.categories,
+            status: product.status ? ProductStatus[product.status] : null,
             is_library_item: product.is_library_item,
             sku: product.sku,
-            tags: product.product_tags.map((pt: any) => pt.tag),
-            assets: product.product_assets.map((pa: any) => ({ id: pa.id, url: pa.file_url, asset_type: Asset[pa.asset_type] })),
+            tags: product.product_tags.map((pt) => pt.tags),
+            assets: product.product_assets.map((pa) => ({ id: pa.id, url: pa.url, asset_type: pa.asset_type ? Asset[pa.asset_type] : 'IMAGE' })),
             createdAt: product.created_at,
             updatedAt: product.updated_at,
         };
