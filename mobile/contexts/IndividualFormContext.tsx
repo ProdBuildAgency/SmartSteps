@@ -46,7 +46,7 @@ export const IndividualFormProvider = ({ children }: { children: ReactNode }) =>
       console.log("Submitting form data:", formData);
       console.log("Backend URL:", backendUrl);
 
-      const response = await axios.post(`${backendUrl}/auth/register`, formData, {
+      const response = await axios.post(`${backendUrl}/api/v1/auth/register`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
