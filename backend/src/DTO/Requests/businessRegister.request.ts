@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const BusinessRegisterRequestSchema = z.object({
+  businessName: z.string().min(2, "Name is Required."),
   address: z.string().min(3, "Address is required"),
   state: z.string().min(2, "State is required"),
   city: z.string().min(2, "City is required"),
