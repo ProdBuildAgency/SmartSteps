@@ -29,21 +29,17 @@ export default function RegisterScreen() {
           borderTopRightRadius: 68,
         }}
       >
-        <Text className="text-center text-2xl font-bold text-gray-900">
+        <Text className="mt-16 text-center text-4xl font-extrabold text-text-100">
           Welcome To
         </Text>
-        <Text className="text-[#ffd83d] font-bold text-center">Smart Steps!</Text>
-
-        <Text className="text-center text-gray-600 mt-1 mb-6">
-          Let's get to know you a little.
-        </Text>
+        <Text className="text-accent-600 text-4xl font-bold text-center">Smart Steps!</Text>
 
         {/* Role Selector */}
-        <View className="flex-row justify-center mb-6">
+        <View className="flex-row justify-center m-1">
           <TouchableOpacity
             className={`px-4 py-2 mx-2 rounded-lg border ${
               selectedRole === "Business"
-                ? "bg-[#0096d6] border-[#F7A400]"
+                ? "bg-primary-400 border-[#F7A400]"
                 : "border-gray-300"
             }`}
             onPress={() => setSelectedRole("Business")}

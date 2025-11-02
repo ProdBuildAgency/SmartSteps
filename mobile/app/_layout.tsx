@@ -3,6 +3,7 @@ import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, P
 import { SplashScreen, Stack } from "expo-router";
 import "./global.css";
 import { BusinessFormProvider } from "@/contexts/BuisnessFormContext";
+import { IndividualFormProvider } from "@/contexts/IndividualFormContext";
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -23,10 +24,12 @@ export default function RootLayout() {
 
   return (
     <BusinessFormProvider>
-    <Stack
-      initialRouteName="(auth)/login"
-      screenOptions={{ headerShown: false }}
-    />
+      <IndividualFormProvider>
+        <Stack
+          initialRouteName="(auth)/login"
+          screenOptions={{ headerShown: false }}
+        />
+      </IndividualFormProvider>
     </BusinessFormProvider>
   );
 }

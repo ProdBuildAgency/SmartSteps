@@ -1,51 +1,52 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-// Define the structure of your form data
+
 export interface BusinessFormData {
-  fullName: string;
+  role: number;
+  name: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   password: string;
   confirmPassword: string;
-  preschoolName: string;
   address: string;
-  city: string;
   state: string;
+  city: string;
   pincode: string;
-  pg: string;
-  nur: string;
-  jkg: string;
-  skg: string;
-  feeMin: string;
-  feeMax: string;
+  preschoolersPg: string;
+  preschoolersNur: string;
+  preschoolersJkg: string;
+  preschoolersSkg: string;
+  feeRangeMin: string;
+  feeRangeMax: string;
 }
 
-// Default (empty) form data
+
 const defaultData: BusinessFormData = {
-  fullName: "",
+  role: 1, 
+  name: "",
   email: "",
-  phone: "",
+  phoneNumber: "",
   password: "",
   confirmPassword: "",
-  preschoolName: "",
   address: "",
-  city: "",
   state: "",
+  city: "",
   pincode: "",
-  pg: "",
-  nur: "",
-  jkg: "",
-  skg: "",
-  feeMin: "",
-  feeMax: "",
+  preschoolersPg: "",
+  preschoolersNur: "",
+  preschoolersJkg: "",
+  preschoolersSkg: "",
+  feeRangeMin: "",
+  feeRangeMax: "",
 };
 
 interface BusinessFormContextProps {
   formData: BusinessFormData;
   updateFormData: (data: Partial<BusinessFormData>) => void;
   submitForm: () => Promise<void>;
+  resetForm: () => void;
 }
-
+const backendUrl = process.env.BACKEND_URL
 const BusinessFormContext = createContext<BusinessFormContextProps | undefined>(undefined);
 
 export const BusinessFormProvider = ({ children }: { children: ReactNode }) => {
@@ -55,38 +56,51 @@ export const BusinessFormProvider = ({ children }: { children: ReactNode }) => {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
-  // Example API call
+
+  const resetForm = () => {
+    setFormData(defaultData);
+  };
+
+  // API call to submit form
   const submitForm = async () => {
     try {
-      const response = await fetch("https://your-backend-url.com/api/business", {
+      console.log("Submitting form data:", formData);
+      console.log(backendUrl)
+
+      const response = await fetch(`https://smartsteps-prodbuild.vercel.app/api/v1/auth/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          preschoolersPg: Number(formData.preschoolersPg),
+          preschoolersNur: Number(formData.preschoolersNur),
+          preschoolersJkg: Number(formData.preschoolersJkg),
+          preschoolersSkg: Number(formData.preschoolersSkg),
+          feeRangeMin: Number(formData.feeRangeMin),
+          feeRangeMax: Number(formData.feeRangeMax),
+        }),
       });
 
-      if (!response.ok) throw new Error("Failed to submit form");
+      if (!response.ok) throw new Error(`Failed to submit form (${response.status})`);
 
       const result = await response.json();
       console.log("Form submitted successfully:", result);
+
+      resetForm(); // Clear after success
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
 
   return (
-    <BusinessFormContext.Provider value={{ formData, updateFormData, submitForm }}>
+    <BusinessFormContext.Provider value={{ formData, updateFormData, submitForm, resetForm }}>
       {children}
     </BusinessFormContext.Provider>
   );
 };
 
-// Custom hook for easy access
 export const useBusinessForm = () => {
   const context = useContext(BusinessFormContext);
-  if (!context) {
-    throw new Error("useBusinessForm must be used within BusinessFormProvider");
-  }
+  if (!context) throw new Error("useBusinessForm must be used within BusinessFormProvider");
   return context;
 };

@@ -8,9 +8,9 @@ interface CustomInputProps extends TextInputProps {
 
 export default function CustomInput({ label, required, ...props }: CustomInputProps) {
   return (
-    <View>
+    <View className="my-2">
       <Text className="text-gray-700 font-medium mb-1">
-        {label} {required && <Text className="text-red-500">*</Text>}
+        {label} {required && <Text className="text-primary-500">*</Text>}
       </Text>
       <TextInput
         {...props}
