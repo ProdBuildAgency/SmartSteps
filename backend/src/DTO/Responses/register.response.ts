@@ -6,6 +6,6 @@ export interface RegisterResponse {
     name: string;
   };
   business?: {
-    name: string;
+    businessName: string;
   };
 }
