@@ -42,6 +42,11 @@ export const IndividualFormProvider = ({ children }: { children: ReactNode }) =>
   };
 
   const submitForm = async () => {
+    if (!backendUrl) {
+      const errorMessage = "Backend URL is not configured. Please check your environment variables for EXPO_PUBLIC_BACKEND_URL.";
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
     try {
       console.log("Submitting form data:", formData);
       console.log("Backend URL:", backendUrl);
@@ -53,12 +58,21 @@ export const IndividualFormProvider = ({ children }: { children: ReactNode }) =>
       });
 
       console.log("Form submitted successfully:", response.data);
-      resetForm(); // Clear after success
-    } catch (error: any) {
+      resetForm();
+    } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Axios error submitting form:", error.response?.data || error.message);
+        if (error.response) {
+          console.error("Backend Error:", {
+            status: error.response.status,
+            data: error.response.data,
+          });
+        } else if (error.request) {
+          console.error("Network Error: No response received from the server.", error.request);
+        } else {
+          console.error("Axios Setup Error:", error.message);
+        }
       } else {
-        console.error("Unexpected error submitting form:", error);
+        console.error("Unexpected Error:", error);
       }
     }
   };
