@@ -80,7 +80,8 @@ export const BusinessFormProvider = ({ children }: { children: ReactNode }) => {
           feeRangeMax: Number(formData.feeRangeMax),
         }),
       });
-
+      console.log(response)
+      
       if (!response.ok) throw new Error(`Failed to submit form (${response.status})`);
 
       const result = await response.json();

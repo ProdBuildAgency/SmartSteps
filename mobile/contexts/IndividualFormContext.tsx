@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-
+import axios from "axios";
 
 export interface IndividualFormData {
   role: number;
@@ -8,17 +8,15 @@ export interface IndividualFormData {
   phoneNumber: string;
   password: string;
   confirmPassword: string;
-  
 }
 
-
 const defaultData: IndividualFormData = {
-  role: 2, 
+  role: 2,
   name: "",
   email: "",
   phoneNumber: "",
   password: "",
-  confirmPassword: ""
+  confirmPassword: "",
 };
 
 interface IndividualFormContextProps {
@@ -27,7 +25,9 @@ interface IndividualFormContextProps {
   submitForm: () => Promise<void>;
   resetForm: () => void;
 }
-const backendUrl = process.env.BACKEND_URL
+
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 const IndividualFormContext = createContext<IndividualFormContextProps | undefined>(undefined);
 
 export const IndividualFormProvider = ({ children }: { children: ReactNode }) => {
@@ -37,33 +37,29 @@ export const IndividualFormProvider = ({ children }: { children: ReactNode }) =>
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
-
   const resetForm = () => {
     setFormData(defaultData);
   };
 
-  // API call to submit form
   const submitForm = async () => {
     try {
       console.log("Submitting form data:", formData);
-      console.log(backendUrl)
+      console.log("Backend URL:", backendUrl);
 
-      const response = await fetch(`https://smartsteps-prodbuild.vercel.app/api/v1/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-        }),
+      const response = await axios.post(`${backendUrl}/auth/register`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
-      if (!response.ok) throw new Error(`Failed to submit form (${response.status})`);
-
-      const result = await response.json();
-      console.log("Form submitted successfully:", result);
-
+      console.log("Form submitted successfully:", response.data);
       resetForm(); // Clear after success
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error submitting form:", error.response?.data || error.message);
+      } else {
+        console.error("Unexpected error submitting form:", error);
+      }
     }
   };
 
