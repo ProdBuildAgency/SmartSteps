@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import BusinessForm from "../../components/BuisnessForm"; // adjust the path if needed
-import IndividualForm from "@/components/IndividualForm";
+import IndividualForm from "../../components/IndividualForm";
 
 export default function RegisterScreen() {
   const [selectedRole, setSelectedRole] = useState("Business");

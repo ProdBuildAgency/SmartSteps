@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import StepNavigator from "./StepNavigatior";
+import StepNavigator from "./StepNavigator";
 import CustomInput from "./ui/CustomInput";
-import { useIndividualForm } from "../contexts/IndividualFormContext"; // adjust import path
+import { useIndividualForm } from "../contexts/RegisterUserContext"; // ✅ unified context import
 
 export default function IndividualForm() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const totalSteps = 2;
-
 
   const { formData, updateFormData, submitForm } = useIndividualForm();
 
@@ -17,10 +16,14 @@ export default function IndividualForm() {
     if (step < totalSteps - 1) {
       setStep(step + 1);
     } else {
-      // Submit the form on final step
-      await submitForm();
-      Alert.alert("Success", "Registration successful!");
-      router.push("/(auth)/login");
+      try {
+        await submitForm();
+        Alert.alert("Success", "Registration successful!");
+        router.push("/(auth)/login");
+      } catch (error) {
+        console.error("Error during registration:", error);
+        Alert.alert("Error", "Registration failed. Please try again.");
+      }
     }
   };
 

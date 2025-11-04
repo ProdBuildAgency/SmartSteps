@@ -1,9 +1,14 @@
 import React, { useEffect } from "react";
-import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold } from "@expo-google-fonts/poppins";
+import {
+  useFonts,
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+} from "@expo-google-fonts/poppins";
 import { SplashScreen, Stack } from "expo-router";
 import "./global.css";
-import { BusinessFormProvider } from "@/contexts/BuisnessFormContext";
-import { IndividualFormProvider } from "@/contexts/IndividualFormContext";
+import { RegisterUserProvider } from "@/contexts/RegisterUserContext"; // ✅ unified provider
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -23,13 +28,11 @@ export default function RootLayout() {
   }
 
   return (
-    <BusinessFormProvider>
-      <IndividualFormProvider>
-        <Stack
-          initialRouteName="(auth)/login"
-          screenOptions={{ headerShown: false }}
-        />
-      </IndividualFormProvider>
-    </BusinessFormProvider>
+    <RegisterUserProvider>
+      <Stack
+        initialRouteName="(auth)/login"
+        screenOptions={{ headerShown: false }}
+      />
+    </RegisterUserProvider>
   );
 }
