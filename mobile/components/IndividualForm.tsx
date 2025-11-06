@@ -3,7 +3,7 @@ import { View, Text, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import StepNavigator from "./StepNavigator";
 import CustomInput from "./ui/CustomInput";
-import { useIndividualForm } from "../contexts/RegisterUserContext"; // ✅ unified context import
+import { useIndividualForm } from "../contexts/RegisterUserContext"; 
 
 export default function IndividualForm() {
   const router = useRouter();

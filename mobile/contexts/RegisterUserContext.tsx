@@ -12,6 +12,7 @@ export interface BusinessFormData {
   phoneNumber: string;
   password: string;
   confirmPassword: string;
+  businessName: string;
   address: string;
   state: string;
   city: string;
@@ -31,6 +32,7 @@ const defaultBusinessData: BusinessFormData = {
   phoneNumber: "",
   password: "",
   confirmPassword: "",
+  businessName:"",
   address: "",
   state: "",
   city: "",

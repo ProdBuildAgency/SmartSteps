@@ -5,6 +5,8 @@ import StepNavigator from "./StepNavigator";
 import CustomInput from "./ui/CustomInput";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { useBusinessForm } from "@/contexts/RegisterUserContext";
+// import AppAlert from "@/components/ui/AppAlert";
+
 
 export default function BusinessForm() {
   const router = useRouter();
@@ -40,15 +42,17 @@ export default function BusinessForm() {
         break;
       case 4:
         if (
-          !formData.preschoolersPg ||
-          !formData.preschoolersNur ||
-          !formData.preschoolersJkg ||
-          !formData.preschoolersSkg ||
-          !formData.feeRangeMin ||
-          !formData.feeRangeMax
-        )
+          formData.preschoolersPg === "" ||
+          formData.preschoolersNur === "" ||
+          formData.preschoolersJkg === "" ||
+          formData.preschoolersSkg === "" ||
+          formData.feeRangeMin === "" ||
+          formData.feeRangeMax === ""
+        ) {
           return "Please fill all preschooler and fee details.";
+        }
         break;
+
       default:
         break;
     }
@@ -117,7 +121,7 @@ export default function BusinessForm() {
         {/* STEP 1 — Password Setup */}
         {step === 1 && (
           <>
-                        <Text className="text-center text-textSecondary">
+            <Text className="text-center text-textSecondary">
               Let's get to know you a little
             </Text>
             <CustomInput
@@ -148,6 +152,13 @@ export default function BusinessForm() {
             <Text className="text-center">
               This helps us to personalize your experience
             </Text>
+              <CustomInput
+              label="Preschool Name"
+              required
+              placeholder="Enter Preschool Name"
+              value={formData.businessName}
+              onChangeText={(text) => updateFormData({ businessName: text })}
+            />
           </>
         )}
 
@@ -207,47 +218,47 @@ export default function BusinessForm() {
             <Text className="text-center">
               This helps us to personalize your experience
             </Text>
-                        <Text className="text-gray-700 font-medium mb-1">
+            <Text className="text-gray-700 font-medium mb-1">
               Number of Preschoolers <Text className="text-primary-500">*</Text>
             </Text>
             <View className="flex-row gap-x-4">
-               <View className="flex-1">
-              <CustomInput
-                label="PG"
-                required
-                placeholder="PG"
-                keyboardType="number-pad"
-                value={formData.preschoolersPg}
-                onChangeText={(text) => updateFormData({ preschoolersPg: text })}
-              />
+              <View className="flex-1">
+                <CustomInput
+                  label="PG"
+                  required
+                  placeholder="PG"
+                  keyboardType="number-pad"
+                  value={formData.preschoolersPg}
+                  onChangeText={(text) => updateFormData({ preschoolersPg: text })}
+                />
               </View>
               <View className="flex-1">
-              <CustomInput
-                label="Nursery"
-                required
-                placeholder="Nursery"
-                keyboardType="number-pad"
-                value={formData.preschoolersNur}
-                onChangeText={(text) => updateFormData({ preschoolersNur: text })}
-              /></View>
+                <CustomInput
+                  label="Nursery"
+                  required
+                  placeholder="Nursery"
+                  keyboardType="number-pad"
+                  value={formData.preschoolersNur}
+                  onChangeText={(text) => updateFormData({ preschoolersNur: text })}
+                /></View>
               <View className="flex-1">
-              <CustomInput
-                label="Jr. KG"
-                required
-                placeholder="Jr. KG"
-                keyboardType="number-pad"
-                value={formData.preschoolersJkg}
-                onChangeText={(text) => updateFormData({ preschoolersJkg: text })}
-              /></View>
+                <CustomInput
+                  label="Jr. KG"
+                  required
+                  placeholder="Jr. KG"
+                  keyboardType="number-pad"
+                  value={formData.preschoolersJkg}
+                  onChangeText={(text) => updateFormData({ preschoolersJkg: text })}
+                /></View>
               <View className="flex-1">
-              <CustomInput
-                label="Sr. KG"
-                required
-                placeholder="Sr. KG"
-                keyboardType="number-pad"
-                value={formData.preschoolersSkg}
-                onChangeText={(text) => updateFormData({ preschoolersSkg: text })}
-              /></View>
+                <CustomInput
+                  label="Sr. KG"
+                  required
+                  placeholder="Sr. KG"
+                  keyboardType="number-pad"
+                  value={formData.preschoolersSkg}
+                  onChangeText={(text) => updateFormData({ preschoolersSkg: text })}
+                /></View>
             </View>
 
             <Text className="text-gray-700 font-medium mb-1">
@@ -255,23 +266,23 @@ export default function BusinessForm() {
             </Text>
             <View className="flex-row gap-x-4">
               <View className="flex-1">
-              <CustomInput
-                label="Min"
-                required
-                placeholder="Min"
-                keyboardType="number-pad"
-                value={formData.feeRangeMin}
-                onChangeText={(text) => updateFormData({ feeRangeMin: text })}
-              /></View>
+                <CustomInput
+                  label="Min"
+                  required
+                  placeholder="Min"
+                  keyboardType="number-pad"
+                  value={formData.feeRangeMin}
+                  onChangeText={(text) => updateFormData({ feeRangeMin: text })}
+                /></View>
               <View className="flex-1">
-              <CustomInput
-                label="Max"
-                required
-                placeholder="Max"
-                keyboardType="number-pad"
-                value={formData.feeRangeMax}
-                onChangeText={(text) => updateFormData({ feeRangeMax: text })}
-              /></View>
+                <CustomInput
+                  label="Max"
+                  required
+                  placeholder="Max"
+                  keyboardType="number-pad"
+                  value={formData.feeRangeMax}
+                  onChangeText={(text) => updateFormData({ feeRangeMax: text })}
+                /></View>
             </View>
           </>
         )}
@@ -298,19 +309,8 @@ export default function BusinessForm() {
         </Text>
       </View>
 
-      {/* Awesome Alert */}
-      <AwesomeAlert
-        show={alertVisible}
-        showProgress={false}
-        title="Alert"
-        message={alertMessage}
-        closeOnTouchOutside
-        closeOnHardwareBackPress
-        showConfirmButton
-        confirmText="OK"
-        confirmButtonColor="#F7A400"
-        onConfirmPressed={hideAlert}
-      />
+      {/* <AppAlert visible={alertVisible} message={alertMessage} onClose={hideAlert} /> */}
+
     </View>
   );
 }
