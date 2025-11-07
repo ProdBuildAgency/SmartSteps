@@ -9,6 +9,7 @@ import {
 import { SplashScreen, Stack } from "expo-router";
 import "./global.css";
 import { RegisterUserProvider } from "@/contexts/RegisterUserContext"; // ✅ unified provider
+import { SessionProvider } from "@/contexts/SessionContext";
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -28,11 +29,13 @@ export default function RootLayout() {
   }
 
   return (
+    <SessionProvider>
     <RegisterUserProvider>
       <Stack
         initialRouteName="(auth)/login"
         screenOptions={{ headerShown: false }}
       />
     </RegisterUserProvider>
+    </SessionProvider>
   );
 }

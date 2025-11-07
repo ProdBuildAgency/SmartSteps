@@ -7,12 +7,15 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import { useBusinessForm } from "@/contexts/RegisterUserContext";
 // import AppAlert from "@/components/ui/AppAlert";
 
-
-export default function BusinessForm() {
+interface BusinessFormProps {
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export default function BusinessForm({setIsLoading }: BusinessFormProps) {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const totalSteps = 5;
   const { formData, updateFormData, submitForm } = useBusinessForm();
+
 
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -70,14 +73,19 @@ export default function BusinessForm() {
       setStep(step + 1);
     } else {
       try {
+        setIsLoading(true); // ⬅️ Show loader
         await submitForm();
+        setIsLoading(false); // ⬅️ Hide loader
+
         showAlert("Registration successful!");
         setTimeout(() => router.push("/(auth)/login"), 1500);
       } catch (err) {
+        setIsLoading(false); // ⬅️ Hide loader
         showAlert("Something went wrong. Please try again.");
       }
     }
   };
+
 
   const handleBack = () => {
     if (step > 0) setStep(step - 1);
@@ -152,7 +160,7 @@ export default function BusinessForm() {
             <Text className="text-center">
               This helps us to personalize your experience
             </Text>
-              <CustomInput
+            <CustomInput
               label="Preschool Name"
               required
               placeholder="Enter Preschool Name"
@@ -310,6 +318,8 @@ export default function BusinessForm() {
       </View>
 
       {/* <AppAlert visible={alertVisible} message={alertMessage} onClose={hideAlert} /> */}
+  
+
 
     </View>
   );

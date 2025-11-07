@@ -5,27 +5,34 @@ import StepNavigator from "./StepNavigator";
 import CustomInput from "./ui/CustomInput";
 import { useIndividualForm } from "../contexts/RegisterUserContext"; 
 
-export default function IndividualForm() {
+interface IndividualFormProps {
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export default function IndividualForm({setIsLoading }: IndividualFormProps) {
   const router = useRouter();
   const [step, setStep] = useState(0);
+
   const totalSteps = 2;
 
   const { formData, updateFormData, submitForm } = useIndividualForm();
 
-  const handleNext = async () => {
-    if (step < totalSteps - 1) {
-      setStep(step + 1);
-    } else {
-      try {
-        await submitForm();
-        Alert.alert("Success", "Registration successful!");
-        router.push("/(auth)/login");
-      } catch (error) {
-        console.error("Error during registration:", error);
-        Alert.alert("Error", "Registration failed. Please try again.");
-      }
+const handleNext = async () => {
+  if (step < totalSteps - 1) {
+    setStep(step + 1);
+  } else {
+    try {
+      setIsLoading(true); // show loading
+      await submitForm();
+      setIsLoading(false); // hide loading
+      router.push("/(auth)/login");
+    } catch (error) {
+      setIsLoading(false); // hide loading on error
+      console.error("Error during registration:", error);
+      Alert.alert("Error", "Registration failed. Please try again.");
     }
-  };
+  }
+};
+
 
   const handleBack = () => {
     if (step > 0) setStep(step - 1);
@@ -116,6 +123,7 @@ export default function IndividualForm() {
           </Text>
         </Text>
       </View>
+
     </View>
   );
 }

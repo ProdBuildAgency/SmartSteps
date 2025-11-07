@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import BusinessForm from "../../components/BuisnessForm"; // adjust the path if needed
 import IndividualForm from "../../components/IndividualForm";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
 export default function RegisterScreen() {
   const [selectedRole, setSelectedRole] = useState("Business");
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
+<View className="flex-1">
     <ScrollView
       className="flex-1 bg-[#ff8c1a]"
       contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
@@ -37,34 +40,30 @@ export default function RegisterScreen() {
         {/* Role Selector */}
         <View className="flex-row justify-center m-1">
           <TouchableOpacity
-            className={`px-4 py-2 mx-2 rounded-lg border ${
-              selectedRole === "Business"
+            className={`px-4 py-2 mx-2 rounded-lg border ${selectedRole === "Business"
                 ? "bg-primary-400 border-[#F7A400]"
                 : "border-gray-300"
-            }`}
+              }`}
             onPress={() => setSelectedRole("Business")}
           >
             <Text
-              className={`font-medium ${
-                selectedRole === "Business" ? "text-white" : "text-gray-700"
-              }`}
+              className={`font-medium ${selectedRole === "Business" ? "text-white" : "text-gray-700"
+                }`}
             >
               Business
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`px-4 py-2 mx-2 rounded-lg border ${
-              selectedRole === "Individual"
+            className={`px-4 py-2 mx-2 rounded-lg border ${selectedRole === "Individual"
                 ? "bg-[#0096d6] border-[#F7A400]"
                 : "border-gray-300"
-            }`}
+              }`}
             onPress={() => setSelectedRole("Individual")}
           >
             <Text
-              className={`font-medium ${
-                selectedRole === "Individual" ? "text-white" : "text-gray-700"
-              }`}
+              className={`font-medium ${selectedRole === "Individual" ? "text-white" : "text-gray-700"
+                }`}
             >
               Individual
             </Text>
@@ -73,11 +72,14 @@ export default function RegisterScreen() {
 
         {/* Conditional Rendering */}
         {selectedRole === "Business" ? (
-          <BusinessForm />
+          <BusinessForm setIsLoading={setIsLoading} />
         ) : (
-          <IndividualForm/>
+          <IndividualForm setIsLoading={setIsLoading} />
         )}
+        
       </View>
     </ScrollView>
+    {isLoading && <LoadingOverlay />}
+    </View>
   );
 }
