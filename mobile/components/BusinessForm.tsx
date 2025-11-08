@@ -3,9 +3,7 @@ import { View, Text } from "react-native";
 import { useRouter } from "expo-router";
 import StepNavigator from "./StepNavigator";
 import CustomInput from "./ui/CustomInput";
-import AwesomeAlert from "react-native-awesome-alerts";
 import { useBusinessForm } from "@/contexts/RegisterUserContext";
-// import AppAlert from "@/components/ui/AppAlert";
 
 interface BusinessFormProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -97,13 +95,10 @@ export default function BusinessForm({setIsLoading }: BusinessFormProps) {
         {/* STEP 0 — Basic Details */}
         {step === 0 && (
           <>
-            <Text className="text-center text-textSecondary">
-              Let's get to know you a little
-            </Text>
             <CustomInput
-              label="Business Name"
+              label="Full Name"
               required
-              placeholder="Enter Business Name"
+              placeholder="Enter Full Name"
               value={formData.name}
               onChangeText={(text) => updateFormData({ name: text })}
             />
@@ -129,9 +124,6 @@ export default function BusinessForm({setIsLoading }: BusinessFormProps) {
         {/* STEP 1 — Password Setup */}
         {step === 1 && (
           <>
-            <Text className="text-center text-textSecondary">
-              Let's get to know you a little
-            </Text>
             <CustomInput
               label="Password"
               required
@@ -154,14 +146,14 @@ export default function BusinessForm({setIsLoading }: BusinessFormProps) {
         {/* STEP 2 — Preschool Basic Info */}
         {step === 2 && (
           <>
-            <Text className="text-center text-text-100 font-extrabold text-2xl">
+            <Text className="text-center text-text-100 text-h3">
               Tell us about your <Text className="text-accent-600">preschool</Text>
             </Text>
-            <Text className="text-center">
+            <Text className="text-center text-caption">
               This helps us to personalize your experience
             </Text>
             <CustomInput
-              label="Preschool Name"
+              label="Name"
               required
               placeholder="Enter Preschool Name"
               value={formData.businessName}
@@ -173,10 +165,10 @@ export default function BusinessForm({setIsLoading }: BusinessFormProps) {
         {/* STEP 3 — Address Info */}
         {step === 3 && (
           <>
-            <Text className="text-center text-text-100 font-extrabold text-2xl">
+            <Text className="text-center text-text-100 text-h3">
               Tell us about your <Text className="text-accent-600">preschool</Text>
             </Text>
-            <Text className="text-center">
+            <Text className="text-center text-caption">
               This helps us to personalize your experience
             </Text>
             <CustomInput
@@ -220,13 +212,13 @@ export default function BusinessForm({setIsLoading }: BusinessFormProps) {
         {/* STEP 4 — Preschool Details */}
         {step === 4 && (
           <>
-            <Text className="text-center text-text-100 font-extrabold text-2xl">
+            <Text className="text-center text-text-100 text-h3">
               Tell us about your <Text className="text-accent-600">preschool</Text>
             </Text>
-            <Text className="text-center">
+            <Text className="text-center text-caption">
               This helps us to personalize your experience
             </Text>
-            <Text className="text-gray-700 font-medium mb-1">
+            <Text className="text-textSecondary font-medium mb-1">
               Number of Preschoolers <Text className="text-primary-500">*</Text>
             </Text>
             <View className="flex-row gap-x-4">
@@ -269,7 +261,7 @@ export default function BusinessForm({setIsLoading }: BusinessFormProps) {
                 /></View>
             </View>
 
-            <Text className="text-gray-700 font-medium mb-1">
+            <Text className="text-textSecondary font-medium mb-1">
               Fee Range <Text className="text-primary-500">*</Text>
             </Text>
             <View className="flex-row gap-x-4">
@@ -306,14 +298,15 @@ export default function BusinessForm({setIsLoading }: BusinessFormProps) {
 
       {/* Footer */}
       <View className="mt-4 mb-6">
-        <Text className="text-center text-gray-700">
+        <Text className="text-center text-textSecondary">
           Already have an Account?{" "}
-          <Text
-            className="text-[#F7A400] font-semibold"
+          {/* <Text
+            className="text- font-semibold"
+-------------------------------kaustubh sir thoda 5 min invest kara and tailwindconfig madhle colors fonts kashe use karayche he tumchya AI la vi4a and plz te use kara sir [te ka karayche tumhala mahit nasel tr call me and ask]
             onPress={() => router.push("/(auth)/login")}
           >
             Login
-          </Text>
+          </Text> */}
         </Text>
       </View>
 

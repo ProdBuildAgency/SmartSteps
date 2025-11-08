@@ -25,9 +25,8 @@ export default function StepNavigator({
         {[...Array(totalSteps)].map((_, index) => (
           <View
             key={index}
-            className={`h-2.5 w-2.5 mx-1 rounded-full ${
-              index === step ? "bg-secondary-500" : "bg-textSecondary"
-            }`}
+            className={`h-2.5 w-2.5 mx-1 rounded-full ${index === step ? "bg-secondary-500" : "bg-textSecondary"
+              }`}
           />
         ))}
       </View>
@@ -40,18 +39,29 @@ export default function StepNavigator({
             label="Next →"
             onPress={onNext}
             type="primary"
+            bgColor="secondary-500"
             className="flex-1"
           />
         ) : (
           <>
             <View className="flex-1 mr-2">
-              <CustomButton label="← Back" onPress={onBack} type="secondary" />
+              <CustomButton
+                label="Back"
+                onPress={onBack}
+                type="secondary"
+                borderColor="secondary-500"
+                textColor="secondary-500"
+                icon="ArrowLeft"
+              />
             </View>
             <View className="flex-1 ml-2">
               <CustomButton
-                label={isLastStep ? "Finish →" : "Next →"}
+                label={isLastStep ? "Finish" : "Next"}
                 onPress={onNext}
                 type="primary"
+                bgColor="secondary-500"
+                icon="ArrowRight"
+                iconPlacement="right"
               />
             </View>
           </>

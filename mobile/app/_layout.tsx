@@ -1,17 +1,15 @@
-import React, { useEffect } from "react";
-import {
-  useFonts,
-  Poppins_400Regular,
-  Poppins_500Medium,
-  Poppins_600SemiBold,
-  Poppins_700Bold,
-} from "@expo-google-fonts/poppins";
-import { SplashScreen, Stack } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold } from "@expo-google-fonts/poppins";
+import { SplashScreen as ExpoSplashScreen, Stack } from "expo-router";
 import "./global.css";
-import { RegisterUserProvider } from "@/contexts/RegisterUserContext"; // ✅ unified provider
-import { SessionProvider } from "@/contexts/SessionContext";
+import { RegisterUserProvider, SessionProvider } from "@/contexts";
+import SplashScreen from "@/components/ui/SplashScreen";
+
+ExpoSplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
+
   const [fontsLoaded, error] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
@@ -21,21 +19,30 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (error) throw error;
-    if (fontsLoaded) SplashScreen.hideAsync();
-  }, [fontsLoaded, error]);
+  }, [error]);
 
-  if (!fontsLoaded && !error) {
-    return null;
+  useEffect(() => {
+    if (fontsLoaded) {
+      ExpoSplashScreen.hideAsync();
+
+      setTimeout(() => {
+        setShowSplashScreen(false);
+      }, 5000);
+    }
+  }, [fontsLoaded]);
+
+  if (showSplashScreen || !fontsLoaded) {
+    return <SplashScreen />;
   }
 
   return (
     <SessionProvider>
-    <RegisterUserProvider>
-      <Stack
-        initialRouteName="(auth)/login"
-        screenOptions={{ headerShown: false }}
-      />
-    </RegisterUserProvider>
+      <RegisterUserProvider>
+        <Stack
+          initialRouteName="(auth)/login"
+          screenOptions={{ headerShown: false }}
+        />
+      </RegisterUserProvider>
     </SessionProvider>
   );
 }

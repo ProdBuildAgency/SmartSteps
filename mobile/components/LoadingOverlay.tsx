@@ -5,7 +5,7 @@ export default function LoadingOverlay() {
   return (
     <View className="absolute inset-0 bg-background-950 flex items-center justify-center z-50">
       <Image
-        source={require("../assets/images/register-illustration.png")}
+        source={require("../assets/images/main_logo.png")}
         className="w-100 h-100"
         resizeMode="contain"
       />

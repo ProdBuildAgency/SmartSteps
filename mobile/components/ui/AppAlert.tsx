@@ -1,4 +1,3 @@
-// components/ui/AppAlert.tsx
 import React from "react";
 import AwesomeAlert from "react-native-awesome-alerts";
 
