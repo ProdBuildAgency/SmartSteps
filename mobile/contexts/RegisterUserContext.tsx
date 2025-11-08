@@ -32,7 +32,7 @@ const defaultBusinessData: BusinessFormData = {
   phoneNumber: "",
   password: "",
   confirmPassword: "",
-  businessName:"",
+  businessName: "",
   address: "",
   state: "",
   city: "",
@@ -48,7 +48,7 @@ const defaultBusinessData: BusinessFormData = {
 interface BusinessFormContextProps {
   formData: BusinessFormData;
   updateFormData: (data: Partial<BusinessFormData>) => void;
-  submitForm: () => Promise<void>;
+  submitForm: () => Promise<any>;
   resetForm: () => void;
 }
 
@@ -68,38 +68,45 @@ export const BusinessFormProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const submitForm = async () => {
-    if (!businessBackendUrl) {
-      console.error("❌ Backend URL not configured. Check EXPO_PUBLIC_BACKEND_URL.");
-      return;
+  if (!businessBackendUrl) {
+    throw new Error("❌ Backend URL not configured. Check EXPO_PUBLIC_BACKEND_URL.");
+  }
+
+  try {
+    console.log("Submitting Business form:", formData);
+
+    const payload = {
+      ...formData,
+      preschoolersPg: Number(formData.preschoolersPg),
+      preschoolersNur: Number(formData.preschoolersNur),
+      preschoolersJkg: Number(formData.preschoolersJkg),
+      preschoolersSkg: Number(formData.preschoolersSkg),
+      feeRangeMin: Number(formData.feeRangeMin),
+      feeRangeMax: Number(formData.feeRangeMax),
+    };
+
+    const response = await axios.post(`${businessBackendUrl}/api/v1/auth/register`, payload, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    console.log("✅ Business form submitted:", response.data);
+    resetForm();
+
+    return {
+      token: response.data.token,
+      user: response.data.user,
+    };
+
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("❌ Business form error:", error.response?.data || error.message);
+      throw new Error(error.response?.data?.message || "Registration failed"); // ✅ THROW
     }
+    console.error("❌ Unexpected error:", error);
+    throw new Error("Unexpected error during registration"); // ✅ THROW
+  }
+};
 
-    try {
-      console.log("Submitting Business form:", formData);
-
-      const payload = {
-        ...formData,
-        preschoolersPg: Number(formData.preschoolersPg),
-        preschoolersNur: Number(formData.preschoolersNur),
-        preschoolersJkg: Number(formData.preschoolersJkg),
-        preschoolersSkg: Number(formData.preschoolersSkg),
-        feeRangeMin: Number(formData.feeRangeMin),
-        feeRangeMax: Number(formData.feeRangeMax),
-      };
-
-      const response = await axios.post(`${businessBackendUrl}/api/v1/auth/register`, payload, {
-        headers: { "Content-Type": "application/json" },
-      });
-
-      console.log("✅ Business form submitted:", response.data);
-      resetForm();
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("❌ Business form error:", error.response?.data || error.message);
-      } else {
-        console.error("❌ Unexpected error:", error);
-      }
-    }
-  };
 
   return (
     <BusinessFormContext.Provider value={{ formData, updateFormData, submitForm, resetForm }}>
@@ -139,7 +146,7 @@ const defaultIndividualData: IndividualFormData = {
 interface IndividualFormContextProps {
   formData: IndividualFormData;
   updateFormData: (data: Partial<IndividualFormData>) => void;
-  submitForm: () => Promise<void>;
+  submitForm: () => Promise<any>;
   resetForm: () => void;
 }
 
@@ -157,28 +164,28 @@ export const IndividualFormProvider = ({ children }: { children: ReactNode }) =>
   };
 
   const submitForm = async () => {
-    if (!businessBackendUrl) {
-      console.error("❌ Backend URL not configured. Check EXPO_PUBLIC_BACKEND_URL.");
-      return;
+  if (!businessBackendUrl) throw new Error("Backend URL not configured");
+
+  try {
+    console.log("Submitting Individual form:", formData);
+
+    const response = await axios.post(`${businessBackendUrl}/api/v1/auth/register`, formData);
+
+    resetForm();
+
+    return {
+      token: response.data.token,
+      user: response.data.user,
+    };
+
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "Registration failed");
     }
+    throw new Error("Unexpected error during registration");
+  }
+};
 
-    try {
-      console.log("Submitting Individual form:", formData);
-
-      const response = await axios.post(`${businessBackendUrl}/api/v1/auth/register`, formData, {
-        headers: { "Content-Type": "application/json" },
-      });
-
-      console.log("✅ Individual form submitted:", response.data);
-      resetForm();
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("❌ Individual form error:", error.response?.data || error.message);
-      } else {
-        console.error("❌ Unexpected error:", error);
-      }
-    }
-  };
 
   return (
     <IndividualFormContext.Provider value={{ formData, updateFormData, submitForm, resetForm }}>

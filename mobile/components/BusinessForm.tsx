@@ -4,6 +4,8 @@ import { useRouter } from "expo-router";
 import StepNavigator from "./StepNavigator";
 import CustomInput from "./ui/CustomInput";
 import { useBusinessForm } from "@/contexts/RegisterUserContext";
+import { useSession } from "@/contexts/SessionContext";
+
 
 interface BusinessFormProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,6 +15,8 @@ export default function BusinessForm({setIsLoading }: BusinessFormProps) {
   const [step, setStep] = useState(0);
   const totalSteps = 5;
   const { formData, updateFormData, submitForm } = useBusinessForm();
+  const { login } = useSession();
+
 
 
   const [alertVisible, setAlertVisible] = useState(false);
@@ -60,29 +64,42 @@ export default function BusinessForm({setIsLoading }: BusinessFormProps) {
     return null;
   };
 
-  const handleNext = async () => {
-    const error = validateStepFields();
-    if (error) {
-      showAlert(error);
-      return;
-    }
+const handleNext = async () => {
+  const error = validateStepFields();
+  if (error) {
+    showAlert(error);
+    return;
+  }
 
-    if (step < totalSteps - 1) {
-      setStep(step + 1);
-    } else {
-      try {
-        setIsLoading(true); // ⬅️ Show loader
-        await submitForm();
-        setIsLoading(false); // ⬅️ Hide loader
+  if (step < totalSteps - 1) {
+    setStep(step + 1);
+  } else {
+    try {
+      setIsLoading(true);
 
-        showAlert("Registration successful!");
-        setTimeout(() => router.push("/(auth)/login"), 1500);
-      } catch (err) {
-        setIsLoading(false); // ⬅️ Hide loader
-        showAlert("Something went wrong. Please try again.");
+      const result = await submitForm();
+
+      // ✅ Validate response
+      if (!result || !result.token || !result.user) {
+        setIsLoading(false);
+        showAlert("Registration failed. Please try again.");
+        return;
       }
+
+      // ✅ Store session (only once)
+      await login(result.token, result.user);
+
+      setIsLoading(false);
+      showAlert("Registration successful!");
+
+      setTimeout(() => router.push("/(tabs)/home"), 1500);
+    } catch (err) {
+      setIsLoading(false);
+      showAlert("Something went wrong. Please try again.");
     }
-  };
+  }
+};
+
 
 
   const handleBack = () => {

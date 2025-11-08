@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import StepNavigator from "./StepNavigator";
 import CustomInput from "./ui/CustomInput";
 import { useIndividualForm } from "../contexts/RegisterUserContext"; 
+import { useSession } from "@/contexts/SessionContext";
 
 interface IndividualFormProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,7 +14,7 @@ export default function IndividualForm({setIsLoading }: IndividualFormProps) {
   const [step, setStep] = useState(0);
 
   const totalSteps = 2;
-
+  const { login } = useSession();
   const { formData, updateFormData, submitForm } = useIndividualForm();
 
 const handleNext = async () => {
@@ -21,17 +22,31 @@ const handleNext = async () => {
     setStep(step + 1);
   } else {
     try {
-      setIsLoading(true); // show loading
-      await submitForm();
-      setIsLoading(false); // hide loading
-      router.push("/(auth)/login");
+      setIsLoading(true);
+
+      const result = await submitForm(); // Get token + user
+
+      // ✅ Validate the response
+      if (!result || !result.token || !result.user) {
+        setIsLoading(false);
+        Alert.alert("Error", "Registration failed. Please try again.");
+        return;
+      }
+
+      // ✅ Store the session
+      await login(result.token, result.user);
+
+      setIsLoading(false);
+      router.push("/(tabs)/home");
+
     } catch (error) {
-      setIsLoading(false); // hide loading on error
+      setIsLoading(false);
       console.error("Error during registration:", error);
-      Alert.alert("Error", "Registration failed. Please try again.");
+      Alert.alert("Error", "Something went wrong. Please try again.");
     }
   }
 };
+
 
 
   const handleBack = () => {

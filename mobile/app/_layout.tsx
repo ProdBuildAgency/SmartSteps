@@ -4,6 +4,7 @@ import { SplashScreen as ExpoSplashScreen, Stack } from "expo-router";
 import "./global.css";
 import { RegisterUserProvider, SessionProvider } from "@/contexts";
 import SplashScreen from "@/components/ui/SplashScreen";
+import RootNavigator from "@/components/RootNavigator";
 
 ExpoSplashScreen.preventAutoHideAsync();
 
@@ -38,10 +39,7 @@ export default function RootLayout() {
   return (
     <SessionProvider>
       <RegisterUserProvider>
-        <Stack
-          initialRouteName="(auth)/login"
-          screenOptions={{ headerShown: false }}
-        />
+        <RootNavigator />
       </RegisterUserProvider>
     </SessionProvider>
   );
