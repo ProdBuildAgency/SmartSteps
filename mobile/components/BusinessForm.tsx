@@ -9,10 +9,13 @@ import { useSession } from "@/contexts/SessionContext";
 
 interface BusinessFormProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  step: number;                // ✅ coming from RegisterScreen
+  setStep: React.Dispatch<React.SetStateAction<number>>;  // ✅ coming from RegisterScreen
 }
-export default function BusinessForm({setIsLoading }: BusinessFormProps) {
+
+export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFormProps) {
+
   const router = useRouter();
-  const [step, setStep] = useState(0);
   const totalSteps = 5;
   const { formData, updateFormData, submitForm } = useBusinessForm();
   const { login } = useSession();
@@ -163,12 +166,7 @@ const handleNext = async () => {
         {/* STEP 2 — Preschool Basic Info */}
         {step === 2 && (
           <>
-            <Text className="text-center text-text-100 text-h3">
-              Tell us about your <Text className="text-accent-600">preschool</Text>
-            </Text>
-            <Text className="text-center text-caption">
-              This helps us to personalize your experience
-            </Text>
+
             <CustomInput
               label="Name"
               required
@@ -182,12 +180,7 @@ const handleNext = async () => {
         {/* STEP 3 — Address Info */}
         {step === 3 && (
           <>
-            <Text className="text-center text-text-100 text-h3">
-              Tell us about your <Text className="text-accent-600">preschool</Text>
-            </Text>
-            <Text className="text-center text-caption">
-              This helps us to personalize your experience
-            </Text>
+
             <CustomInput
               label="Address"
               required
@@ -229,12 +222,7 @@ const handleNext = async () => {
         {/* STEP 4 — Preschool Details */}
         {step === 4 && (
           <>
-            <Text className="text-center text-text-100 text-h3">
-              Tell us about your <Text className="text-accent-600">preschool</Text>
-            </Text>
-            <Text className="text-center text-caption">
-              This helps us to personalize your experience
-            </Text>
+
             <Text className="text-textSecondary font-medium mb-1">
               Number of Preschoolers <Text className="text-primary-500">*</Text>
             </Text>

@@ -8,10 +8,15 @@ import { useSession } from "@/contexts/SessionContext";
 
 interface IndividualFormProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  step: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
 }
-export default function IndividualForm({setIsLoading }: IndividualFormProps) {
+
+export default function IndividualForm({ setIsLoading, step, setStep }: IndividualFormProps) {
+
+
   const router = useRouter();
-  const [step, setStep] = useState(0);
+
 
   const totalSteps = 2;
   const { login } = useSession();
@@ -59,9 +64,6 @@ const handleNext = async () => {
       <View className="space-y-4 mt-6">
         {step === 0 && (
           <>
-            <Text className="text-center text-textSecondary">
-              Let's get to know you a little
-            </Text>
 
             <CustomInput
               label="Full Name"
@@ -93,9 +95,7 @@ const handleNext = async () => {
 
         {step === 1 && (
           <>
-            <Text className="text-center text-textSecondary">
-              Secure your account
-            </Text>
+
 
             <CustomInput
               label="Password"
