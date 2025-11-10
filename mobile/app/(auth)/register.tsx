@@ -101,13 +101,13 @@ const stepText = () => {
             <View className="flex-row justify-center mt-3">
               <TouchableOpacity
                 className={`px-4 py-2 mx-2 rounded-lg ${
-                  selectedRole === "Business" ? "bg-primary-400" : "border-gray-300"
+                  selectedRole === "Business" ? "bg-primary-400" : "border-b-[1px] border-textSecondary"
                 }`}
                 onPress={() => setSelectedRole("Business")}
               >
                 <Text
                   className={`font-medium ${
-                    selectedRole === "Business" ? "text-white" : "text-gray-700"
+                    selectedRole === "Business" ? "text-white" : "text-textSecondary"
                   }`}
                 >
                   Business
@@ -116,13 +116,13 @@ const stepText = () => {
 
               <TouchableOpacity
                 className={`px-4 py-2 mx-2 rounded-lg ${
-                  selectedRole === "Individual" ? "bg-primary-500" : "border-gray-300"
+                  selectedRole === "Individual" ? "bg-primary-500" : "border-b-[1px] border-textSecondary"
                 }`}
                 onPress={() => setSelectedRole("Individual")}
               >
                 <Text
                   className={`font-medium ${
-                    selectedRole === "Individual" ? "text-white" : "text-gray-700"
+                    selectedRole === "Individual" ? "text-white" : "text-textSecondary"
                   }`}
                 >
                   Individual
