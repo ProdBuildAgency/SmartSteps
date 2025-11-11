@@ -5,7 +5,7 @@ import StepNavigator from "./StepNavigator";
 import CustomInput from "./ui/CustomInput";
 import { useBusinessForm } from "@/contexts/RegisterUserContext";
 import { useSession } from "@/contexts/SessionContext";
-
+import AppAlert from "@/components/ui/AppAlert"
 
 interface BusinessFormProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -315,7 +315,14 @@ const handleNext = async () => {
         </Text>
       </View>
 
-      {/* <AppAlert visible={alertVisible} message={alertMessage} onClose={hideAlert} /> */}
+      
+<AppAlert
+  visible={alertVisible}
+  type="dialog"
+  message={alertMessage}
+  onPrimary={hideAlert}
+  onClose={hideAlert}
+/>
   
 
 

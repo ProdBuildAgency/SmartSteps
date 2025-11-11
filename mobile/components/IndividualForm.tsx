@@ -3,8 +3,10 @@ import { View, Text, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import StepNavigator from "./StepNavigator";
 import CustomInput from "./ui/CustomInput";
-import { useIndividualForm } from "../contexts/RegisterUserContext"; 
+import { useIndividualForm } from "../contexts/RegisterUserContext";
 import { useSession } from "@/contexts/SessionContext";
+import AppAlert from "@/components/ui/AppAlert";
+
 
 interface IndividualFormProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,36 +23,67 @@ export default function IndividualForm({ setIsLoading, step, setStep }: Individu
   const totalSteps = 2;
   const { login } = useSession();
   const { formData, updateFormData, submitForm } = useIndividualForm();
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
-const handleNext = async () => {
-  if (step < totalSteps - 1) {
-    setStep(step + 1);
-  } else {
-    try {
-      setIsLoading(true);
 
-      const result = await submitForm(); // Get token + user
 
-      // ✅ Validate the response
-      if (!result || !result.token || !result.user) {
-        setIsLoading(false);
-        Alert.alert("Error", "Registration failed. Please try again.");
-        return;
-      }
+  const showAlert = (message: string) => {
+    setAlertMessage(message);
+    setAlertVisible(true);
+  };
 
-      // ✅ Store the session
-      await login(result.token, result.user);
+  const hideAlert = () => setAlertVisible(false);
 
-      setIsLoading(false);
-      router.push("/(tabs)/home");
+  const validateStepFields = () => {
+    switch (step) {
+      case 0:
+        if (!formData.name || !formData.email || !formData.phoneNumber)
+          return "Please fill all the required fields.";
+        break;
 
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error during registration:", error);
-      Alert.alert("Error", "Something went wrong. Please try again.");
+      case 1:
+        if (!formData.password || !formData.confirmPassword)
+          return "Please enter and confirm your password.";
+        if (formData.password !== formData.confirmPassword)
+          return "Passwords do not match. Please re-enter.";
+        break;
     }
-  }
-};
+    return null;
+  };
+
+  const handleNext = async () => {
+    const error = validateStepFields();
+    if (error) {
+      showAlert(error);
+      return;
+    }
+
+    if (step < totalSteps - 1) {
+      setStep(step + 1);
+    } else {
+      try {
+        setIsLoading(true);
+        const result = await submitForm();
+
+        if (!result || !result.token || !result.user) {
+          setIsLoading(false);
+          showAlert("Registration failed. Please try again.");
+          return;
+        }
+
+        await login(result.token, result.user);
+        setIsLoading(false);
+        showAlert("Registration successful!");
+
+        setTimeout(() => router.push("/(tabs)/home"), 1500);
+
+      } catch (error) {
+        setIsLoading(false);
+        showAlert("Something went wrong. Please try again.");
+      }
+    }
+  };
 
 
 
@@ -131,13 +164,21 @@ const handleNext = async () => {
         <Text className="text-center text-gray-700">
           Already have an Account?{" "}
           <Text
-            className="text-[#F7A400] font-semibold"
+            className="text-secondary-600 font-semibold"
             onPress={() => router.push("/(auth)/login")}
           >
             Login
           </Text>
         </Text>
       </View>
+      <AppAlert
+        visible={alertVisible}
+        message={alertMessage}
+        type="toast"
+        primaryText="OK"
+        onPrimary={hideAlert}
+        onClose={hideAlert}
+      />
 
     </View>
   );
