@@ -318,7 +318,8 @@ const handleNext = async () => {
       
 <AppAlert
   visible={alertVisible}
-  type="dialog"
+  type="toast"
+  autoClose={1000}
   message={alertMessage}
   onPrimary={hideAlert}
   onClose={hideAlert}

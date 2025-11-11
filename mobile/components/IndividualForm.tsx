@@ -175,6 +175,7 @@ export default function IndividualForm({ setIsLoading, step, setStep }: Individu
         visible={alertVisible}
         message={alertMessage}
         type="toast"
+        autoClose={1000}
         primaryText="OK"
         onPrimary={hideAlert}
         onClose={hideAlert}

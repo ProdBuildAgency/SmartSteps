@@ -140,7 +140,7 @@ const stepText = () => {
         </View>
       </ScrollView>
 
-      {!isLoading && <LoadingOverlay />}
+      {isLoading && <LoadingOverlay />}
     </View>
   );
 }
