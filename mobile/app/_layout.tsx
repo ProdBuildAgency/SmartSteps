@@ -5,6 +5,7 @@ import "./global.css";
 import { RegisterUserProvider, SessionProvider } from "@/contexts";
 import SplashScreen from "@/components/ui/SplashScreen";
 import RootNavigator from "@/components/RootNavigator";
+import { LoginProvider } from "@/contexts/LoginUserContext";
 
 ExpoSplashScreen.preventAutoHideAsync();
 
@@ -38,9 +39,14 @@ export default function RootLayout() {
 
   return (
     <SessionProvider>
-      <RegisterUserProvider>
-        <RootNavigator />
-      </RegisterUserProvider>
+      <LoginProvider>
+
+        <RegisterUserProvider>
+          <RootNavigator />
+        </RegisterUserProvider>
+
+      </LoginProvider>
     </SessionProvider>
+
   );
 }

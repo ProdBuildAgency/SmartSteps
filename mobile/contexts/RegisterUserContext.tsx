@@ -1,9 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import axios from "axios";
 
-/* -------------------------------------------------------------------------- */
-/*                            BUSINESS FORM CONTEXT                           */
-/* -------------------------------------------------------------------------- */
 
 export interface BusinessFormData {
   role: number;

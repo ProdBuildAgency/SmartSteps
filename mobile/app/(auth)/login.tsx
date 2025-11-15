@@ -1,67 +1,173 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import { useRouter } from "expo-router";
+import LoadingOverlay from "@/components/LoadingOverlay";
+import CustomInput from "@/components/ui/CustomInput";
+import CustomButton from "@/components/ui/CustomButton";
+import AppAlert from "@/components/ui/AppAlert";
+
+import { useSession } from "@/contexts/SessionContext";
+import { useLoginForm } from "@/contexts/LoginUserContext";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const router = useRouter();
+  const { submitLogin, formData, updateFormData } = useLoginForm();
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert("Error", "Please fill in all fields");
+  // ⬅️ Session context
+  const { login } = useSession();
+
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const showAlert = (msg: string) => {
+    setAlertMessage(msg);
+    setAlertVisible(true);
+  };
+
+  const hideAlert = () => setAlertVisible(false);
+
+  const validateLogin = () => {
+    if (!formData.emailOrPhone.trim() || !formData.password.trim()) {
+      return "Please fill all required fields.";
+    }
+
+    if (
+      formData.emailOrPhone.includes("@") &&
+      !formData.emailOrPhone.includes(".")
+    ) {
+      return "Please enter a valid email address.";
+    }
+
+    if (formData.password.length < 8) {
+      return "Password must be at least 8 characters long.";
+    }
+
+    return null;
+  };
+
+  /** -----------------------------
+   *  LOGIN SUBMIT HANDLER
+   * ----------------------------- */
+  const handleLogin = async () => {
+    const error = validateLogin();
+    if (error) {
+      showAlert(error);
       return;
     }
 
-    // Example: login validation (you can replace with Firebase or your API)
-    if (email === "user@example.com" && password === "1234") {
-      router.replace("/(tabs)/home");
-    } else {
-      Alert.alert("Invalid credentials");
+    try {
+      setIsLoading(true);
+
+
+      const result = await submitLogin(); // must return { token, user }
+
+      await login(result.token, result.user);
+
+      setIsLoading(false);
+      showAlert("Login successful!");
+
+      // prevent navigating back to login screen
+      setTimeout(() => {
+        router.replace("/(tabs)/home");
+      }, 800);
+
+    } catch (err: any) {
+      setIsLoading(false);
+      showAlert(err.message || "Login failed. Please try again.");
     }
   };
 
   return (
-    <View className="flex-1 justify-center items-center bg-amber-50 px-6">
-      <Text className="text-3xl font-bold text-amber-800 mb-8">
-        Smart Steps
-      </Text>
+    <View className="flex-1">
+      <ScrollView
+        className="flex-1 bg-secondary-500"
+        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+      >
+        {/* Illustration */}
+        <View className="items-center mt-8">
+          <View className="w-[280px] h-[280px]">
+            <Image
+              source={require("../../assets/images/main_logo.png")}
+              className="w-full h-full"
+              resizeMode="contain"
+            />
+          </View>
+        </View>
 
-      <View className="w-full max-w-sm">
-        <TextInput
-          className="border border-amber-300 rounded-xl px-4 py-3 mb-4 bg-white text-base"
-          placeholder="Email"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
-        />
+        {/* Content */}
+        <View className="flex-1 px-6 mt-4 bg-background-950 rounded-t-[68px]">
 
-        <TextInput
-          className="border border-amber-300 rounded-xl px-4 py-3 mb-6 bg-white text-base"
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-
-        <TouchableOpacity
-          className="bg-amber-600 rounded-xl py-3 active:bg-amber-700"
-          onPress={handleLogin}
-        >
-          <Text className="text-center text-white font-semibold text-lg">
-            Log In
+          <Text className="mt-[48px] text-center text-h1 font-extrabold text-text-100">
+            Welcome To
           </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          className="mt-4"
-          onPress={() => router.push("/(auth)/register")}
-        >
-          <Text className="text-center text-amber-700">
-            Don’t have an account? Register
+          <Text className="text-accent-600 text-h1 font-bold text-center">
+            Smart Steps!
           </Text>
-        </TouchableOpacity>
-      </View>
+
+          <Text className="mt-[12px] text-center text-body text-textSecondary">
+            Let’s begin your learning journey together.
+          </Text>
+
+          {/* Inputs */}
+          <CustomInput
+            label="Email / Phone Number"
+            required
+            placeholder="Enter Email / Phone Number"
+            value={formData.emailOrPhone}
+            onChangeText={(v) => updateFormData({ emailOrPhone: v })}
+          />
+
+          <CustomInput
+            label="Password"
+            required
+            placeholder="Enter Your Password"
+            secureTextEntry
+            value={formData.password}
+            onChangeText={(v) => updateFormData({ password: v })}
+          />
+
+          {/* Login Button */}
+          <CustomButton
+            label="Login"
+            type="primary"
+            bgColor="primary-500"
+            className="mt-4 h-[48px]"
+            onPress={handleLogin}
+          />
+
+          {/* Footer */}
+          <View className="mt-4 mb-6">
+            <Text className="text-center text-gray-700">
+              New here?{" "}
+              <Text
+                className="text-accent-600 font-semibold"
+                onPress={() => router.push("/(auth)/register")}
+              >
+                Create Account
+              </Text>
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
+
+      {isLoading && <LoadingOverlay />}
+
+      <AppAlert
+        visible={alertVisible}
+        message={alertMessage}
+        type="toast"
+        autoClose={1200}
+        primaryText="OK"
+        onPrimary={hideAlert}
+        onClose={hideAlert}
+      />
     </View>
   );
 }
