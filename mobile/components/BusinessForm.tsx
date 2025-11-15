@@ -72,7 +72,22 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
         ) {
           return "Please fill all preschooler and fee details.";
         }
+
+        // ✅ Convert values to numbers
+        const min = Number(formData.feeRangeMin);
+        const max = Number(formData.feeRangeMax);
+
+        // ❗ Check if min < max
+        if (isNaN(min) || isNaN(max)) {
+          return "Fee values must be valid numbers.";
+        }
+
+        if (min >= max) {
+          return "Minimum fee must be less than maximum fee.";
+        }
+
         break;
+
 
       default:
         break;
