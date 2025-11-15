@@ -58,8 +58,11 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
         break;
 
       case 3:
+        if(formData.pincode.length > 6)
+          return "Pincode not longer than 6.";
         if (!formData.address || !formData.city || !formData.state || !formData.pincode)
           return "Please fill all address fields.";
+
         break;
       case 4:
         if (
@@ -87,7 +90,6 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
         }
 
         break;
-
 
       default:
         break;
@@ -351,6 +353,7 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
         autoClose={1000}
         message={alertMessage}
         onPrimary={hideAlert}
+        onError={true}
         onClose={hideAlert}
       />
 

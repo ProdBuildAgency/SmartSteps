@@ -17,6 +17,8 @@ interface AppAlertProps {
 
   onPrimary?: () => void;
   onSecondary?: () => void;
+  onError?: boolean;
+  onSuccess?: boolean;
   onClose?: () => void;
 
   showCloseIcon?: boolean;
@@ -35,6 +37,8 @@ export default function AppAlert({
 
   onPrimary,
   onSecondary,
+  onError,
+  onSuccess,
   onClose,
 
   showCloseIcon = false,
@@ -56,7 +60,7 @@ export default function AppAlert({
 
         {/* TOAST */}
         {type === "toast" && (
-          <View className="absolute bottom-20 px-6 py-3 rounded-xl bg-text-100 shadow-lg border-2">
+          <View className={`absolute bottom-20 px-6 py-3 rounded-xl shadow-lg border-2 ${onError ? "bg-error border-error" : onSuccess ? "bg-success border-success" : "bg-text-100"}`}>
             <Text className="text-background-950 font-poppins text-body">{message}</Text>
           </View>
         )}
@@ -83,7 +87,7 @@ export default function AppAlert({
             )}
 
             {/* Message */}
-            <Text className="text-body text-text-200 font-poppins text-center mb-6">
+            <Text className={`text-body text-text-200 font-poppins text-center mb-6`}>
               {message}
             </Text>
 

@@ -70,7 +70,7 @@ export const BusinessFormProvider = ({ children }: { children: ReactNode }) => {
   }
 
   try {
-    console.log("Submitting Business form:", formData);
+    // console.log("Submitting Business form:", formData);
 
     const payload = {
       ...formData,
@@ -86,7 +86,7 @@ export const BusinessFormProvider = ({ children }: { children: ReactNode }) => {
       headers: { "Content-Type": "application/json" },
     });
 
-    console.log("✅ Business form submitted:", response.data);
+    // console.log("✅ Business form submitted:", response.data);
     resetForm();
 
     return {
@@ -164,7 +164,7 @@ export const IndividualFormProvider = ({ children }: { children: ReactNode }) =>
   if (!businessBackendUrl) throw new Error("Backend URL not configured");
 
   try {
-    console.log("Submitting Individual form:", formData);
+    // console.log("Submitting Individual form:", formData);
 
     const response = await axios.post(`${businessBackendUrl}/api/v1/auth/register`, formData);
 

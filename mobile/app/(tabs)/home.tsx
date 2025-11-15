@@ -9,23 +9,23 @@ export default function Home() {
 
   const handleLogout = async () => {
     await logout();
-    router.replace("/(auth)/login"); // ✅ redirect to login
+    router.replace("/(auth)/login"); 
   };
 
   return (
-    <View className="flex-1 justify-center items-center gap-3">
-      <Text className="text-2xl font-bold">Home</Text>
+    <View className="flex-1 justify-center items-center gap-3 bg-background-950">
+      <Text className="text-h1 text-text-100 font-bold">Home</Text>
 
       {user ? (
         <>
-          <Text className="text-lg">Welcome, {user.name}</Text>
-          <Text className="text-base text-gray-600">Role: {user.role}</Text>
+          <Text className="text-h3">Welcome, {user.name}</Text>
+          <Text className="text-body text-textSecondary">Role: {user.role}</Text>
 
           <TouchableOpacity
             onPress={handleLogout}
-            className="bg-red-600 px-6 py-2 rounded-lg mt-5"
+            className="bg-error px-6 py-2 rounded-lg mt-5"
           >
-            <Text className="text-white font-semibold">Logout</Text>
+            <Text className="text-background-950 font-semibold">Logout</Text>
           </TouchableOpacity>
         </>
       ) : (

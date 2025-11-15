@@ -95,7 +95,7 @@ export default function LoginScreen() {
           <View className="w-[280px] h-[280px]">
             <Image
               source={require("../../assets/images/main_logo.png")}
-              className="w-full h-full"
+              className="w-full h-full mt-2"
               resizeMode="contain"
             />
           </View>
@@ -166,6 +166,7 @@ export default function LoginScreen() {
         autoClose={1200}
         primaryText="OK"
         onPrimary={hideAlert}
+        onError={true}
         onClose={hideAlert}
       />
     </View>
