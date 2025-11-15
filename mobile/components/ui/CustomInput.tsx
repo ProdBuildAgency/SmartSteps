@@ -22,7 +22,7 @@ export default function CustomInput({
   const isPasswordField = secureTextEntry !== undefined;
 
   return (
-    <View className="my-2">
+    <View className="mt-[12px]">
       <Text className="text-textSecondary mb-1 text-body ">
         {label} {required && <Text className="text-primary-500">*</Text>}
       </Text>

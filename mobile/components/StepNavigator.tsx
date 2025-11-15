@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 import CustomButton from "./ui/CustomButton";
+import { ArrowLeft, ArrowRight } from "phosphor-react-native";
+
 
 interface StepNavigatorProps {
   step: number;
@@ -21,15 +23,20 @@ export default function StepNavigator({
   return (
     <View className="items-center mt-8">
       {/* Step Dots */}
-      <View className="flex-row space-x-5 mb-6">
-        {[...Array(totalSteps)].map((_, index) => (
-          <View
-            key={index}
-            className={`h-2.5 w-2.5 mx-1 rounded-full ${index === step ? "bg-secondary-500" : "bg-textSecondary"
-              }`}
-          />
-        ))}
-      </View>
+{/* Step Dots (hidden on first step) */}
+{!isFirstStep && (
+  <View className="flex-row space-x-5 mb-6">
+    {[...Array(totalSteps)].map((_, index) => (
+      <View
+        key={index}
+        className={`h-2.5 w-2.5 mx-1 rounded-full ${
+          index === step ? "bg-secondary-500" : "bg-textSecondary"
+        }`}
+      />
+    ))}
+  </View>
+)}
+
 
       {/* Navigation Buttons */}
       <View className="flex-row justify-between w-full px-8">

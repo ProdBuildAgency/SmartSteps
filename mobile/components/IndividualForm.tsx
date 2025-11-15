@@ -36,21 +36,36 @@ export default function IndividualForm({ setIsLoading, step, setStep }: Individu
   const hideAlert = () => setAlertVisible(false);
 
   const validateStepFields = () => {
-    switch (step) {
-      case 0:
-        if (!formData.name || !formData.email || !formData.phoneNumber)
-          return "Please fill all the required fields.";
-        break;
+  switch (step) {
+    case 0:
+      if (!formData.name || !formData.email || !formData.phoneNumber)
+        return "Please fill all the required fields.";
 
-      case 1:
-        if (!formData.password || !formData.confirmPassword)
-          return "Please enter and confirm your password.";
-        if (formData.password !== formData.confirmPassword)
-          return "Passwords do not match. Please re-enter.";
-        break;
-    }
-    return null;
-  };
+      // ✅ Email format check
+      if (!formData.email.includes("@") || !formData.email.includes("."))
+        return "Please enter a valid email address.";
+
+      break;
+
+    case 1:
+      if (!formData.password || !formData.confirmPassword)
+        return "Please enter and confirm your password.";
+
+      // ✅ Password should be at least 8 characters
+      if (formData.password.length < 8)
+        return "Password must be at least 8 characters long.";
+
+      if (formData.password !== formData.confirmPassword)
+        return "Passwords do not match. Please re-enter.";
+
+      break;
+
+    default:
+      break;
+  }
+  return null;
+};
+
 
   const handleNext = async () => {
     const error = validateStepFields();
@@ -92,7 +107,7 @@ export default function IndividualForm({ setIsLoading, step, setStep }: Individu
   };
 
   return (
-    <View className="flex-1 justify-between">
+    <View className="flex-1 ">
       {/* Step Content */}
       <View className="space-y-4 mt-6">
         {step === 0 && (
@@ -160,17 +175,20 @@ export default function IndividualForm({ setIsLoading, step, setStep }: Individu
       />
 
       {/* Already have an account */}
-      <View className="mt-4 mb-6">
-        <Text className="text-center text-gray-700">
-          Already have an Account?{" "}
-          <Text
-            className="text-secondary-600 font-semibold"
-            onPress={() => router.push("/(auth)/login")}
-          >
-            Login
-          </Text>
-        </Text>
-      </View>
+{step === 0 && (
+  <View className="mt-4 mb-6">
+    <Text className="text-center text-gray-700">
+      Already have an Account?{" "}
+      <Text
+        className="text-accent-600 font-semibold"
+        onPress={() => router.push("/(auth)/login")}
+      >
+        Login
+      </Text>
+    </Text>
+  </View>
+)}
+
       <AppAlert
         visible={alertVisible}
         message={alertMessage}

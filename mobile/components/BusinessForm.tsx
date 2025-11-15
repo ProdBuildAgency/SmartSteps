@@ -37,13 +37,26 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
       case 0:
         if (!formData.name || !formData.email || !formData.phoneNumber)
           return "Please fill all the required fields.";
+
+        // 🔍 Email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email))
+          return "Please enter a valid email address.";
+
         break;
+
       case 1:
         if (!formData.password || !formData.confirmPassword)
           return "Please enter and confirm your password.";
+
+        if (formData.password.length < 8)
+          return "Password must be at least 8 characters long.";
+
         if (formData.password !== formData.confirmPassword)
           return "Passwords do not match. Please re-enter.";
+
         break;
+
       case 3:
         if (!formData.address || !formData.city || !formData.state || !formData.pincode)
           return "Please fill all address fields.";
@@ -67,41 +80,41 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
     return null;
   };
 
-const handleNext = async () => {
-  const error = validateStepFields();
-  if (error) {
-    showAlert(error);
-    return;
-  }
-
-  if (step < totalSteps - 1) {
-    setStep(step + 1);
-  } else {
-    try {
-      setIsLoading(true);
-
-      const result = await submitForm();
-
-      // ✅ Validate response
-      if (!result || !result.token || !result.user) {
-        setIsLoading(false);
-        showAlert("Registration failed. Please try again.");
-        return;
-      }
-
-      // ✅ Store session (only once)
-      await login(result.token, result.user);
-
-      setIsLoading(false);
-      showAlert("Registration successful!");
-
-      setTimeout(() => router.push("/(tabs)/home"), 1500);
-    } catch (err) {
-      setIsLoading(false);
-      showAlert("Something went wrong. Please try again.");
+  const handleNext = async () => {
+    const error = validateStepFields();
+    if (error) {
+      showAlert(error);
+      return;
     }
-  }
-};
+
+    if (step < totalSteps - 1) {
+      setStep(step + 1);
+    } else {
+      try {
+        setIsLoading(true);
+
+        const result = await submitForm();
+
+        // ✅ Validate response
+        if (!result || !result.token || !result.user) {
+          setIsLoading(false);
+          showAlert("Registration failed. Please try again.");
+          return;
+        }
+
+        // ✅ Store session (only once)
+        await login(result.token, result.user);
+
+        setIsLoading(false);
+        showAlert("Registration successful!");
+
+        setTimeout(() => router.push("/(tabs)/home"), 1500);
+      } catch (err) {
+        setIsLoading(false);
+        showAlert("Something went wrong. Please try again.");
+      }
+    }
+  };
 
 
 
@@ -110,8 +123,8 @@ const handleNext = async () => {
   };
 
   return (
-    <View className="flex-1 justify-between">
-      <View className="space-y-4 mt-6">
+    <View className="flex-1">
+      <View className="space-y-4 mt-6 ">
         {/* STEP 0 — Basic Details */}
         {step === 0 && (
           <>
@@ -241,7 +254,7 @@ const handleNext = async () => {
                 <CustomInput
                   label="Nursery"
                   required
-                  placeholder="Nursery"
+                  placeholder="NUR"
                   keyboardType="number-pad"
                   value={formData.preschoolersNur}
                   onChangeText={(text) => updateFormData({ preschoolersNur: text })}
@@ -250,7 +263,7 @@ const handleNext = async () => {
                 <CustomInput
                   label="Jr. KG"
                   required
-                  placeholder="Jr. KG"
+                  placeholder="JKG"
                   keyboardType="number-pad"
                   value={formData.preschoolersJkg}
                   onChangeText={(text) => updateFormData({ preschoolersJkg: text })}
@@ -259,14 +272,14 @@ const handleNext = async () => {
                 <CustomInput
                   label="Sr. KG"
                   required
-                  placeholder="Sr. KG"
+                  placeholder="SKG"
                   keyboardType="number-pad"
                   value={formData.preschoolersSkg}
                   onChangeText={(text) => updateFormData({ preschoolersSkg: text })}
                 /></View>
             </View>
 
-            <Text className="text-textSecondary font-medium mb-1">
+            <Text className="text-textSecondary font-medium mt-[12px]">
               Fee Range <Text className="text-primary-500">*</Text>
             </Text>
             <View className="flex-row gap-x-4">
@@ -300,31 +313,32 @@ const handleNext = async () => {
         onBack={handleBack}
         onNext={handleNext}
       />
+      {/* footer */}
+      {step === 0 && (
+        <View className="mt-4 mb-6">
+          <Text className="text-center text-gray-700">
+            Already have an Account?{" "}
+            <Text
+              className="text-accent-600 font-semibold"
+              onPress={() => router.push("/(auth)/login")}
+            >
+              Login
+            </Text>
+          </Text>
+        </View>
+      )}
 
-      {/* Footer */}
-      <View className="mt-4 mb-6">
-        <Text className="text-center text-textSecondary">
-          Already have an Account?{" "}
-          {/* <Text
-            className="text- font-semibold"
--------------------------------kaustubh sir thoda 5 min invest kara and tailwindconfig madhle colors fonts kashe use karayche he tumchya AI la vi4a and plz te use kara sir [te ka karayche tumhala mahit nasel tr call me and ask]
-            onPress={() => router.push("/(auth)/login")}
-          >
-            Login
-          </Text> */}
-        </Text>
-      </View>
 
-      
-<AppAlert
-  visible={alertVisible}
-  type="toast"
-  autoClose={1000}
-  message={alertMessage}
-  onPrimary={hideAlert}
-  onClose={hideAlert}
-/>
-  
+
+      <AppAlert
+        visible={alertVisible}
+        type="toast"
+        autoClose={1000}
+        message={alertMessage}
+        onPrimary={hideAlert}
+        onClose={hideAlert}
+      />
+
 
 
     </View>

@@ -21,7 +21,7 @@ const stepText = () => {
     // Step 0 & 1 → Intro
     if (step === 0 || step === 1)
       return (
-        <Text className="mt-0.5 text-center text-body text-textSecondary">
+        <Text className="mt-[12px] text-center text-body text-textSecondary">
           Let's get to know you a little
         </Text>
       );
@@ -30,7 +30,7 @@ const stepText = () => {
     if (step === 2)
       return (
         <>
-          <Text className="text-center text-text-100 text-h3">
+          <Text className="text-center mt-[12px] text-text-100 text-h3">
             Tell us about your <Text className="text-accent-600">preschool</Text>
           </Text>
           <Text className="text-center text-caption">
@@ -43,7 +43,7 @@ const stepText = () => {
     if (step === 3 || step === 4)
       return (
         <>
-          <Text className="text-center text-text-100 text-h3">
+          <Text className="text-center mt-[12px]  text-text-100 text-h3">
             Tell us about your <Text className="text-accent-600">preschool</Text>
           </Text>
           <Text className="text-center text-caption">
@@ -56,7 +56,7 @@ const stepText = () => {
   /* ---------- INDIVIDUAL ROLE ---------- */
   if (step === 0 || step === 1)
     return (
-      <Text className="mt-0.5 text-center text-body text-textSecondary">
+      <Text className="mt-[12px] text-center text-body text-textSecondary">
         Let's get to know you a little
       </Text>
     );
@@ -86,7 +86,7 @@ const stepText = () => {
 
         {/* Content */}
         <View className="flex-1 px-6 mt-4 bg-background-950 rounded-t-[68px]">
-          <Text className="mt-16 text-center text-h1 font-extrabold text-text-100">
+          <Text className="mt-[48px] text-center text-h1 font-extrabold text-text-100">
             Welcome To
           </Text>
           <Text className="text-accent-600 text-h1 font-bold text-center">

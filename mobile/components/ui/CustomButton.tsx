@@ -60,16 +60,21 @@ export default function CustomButton({
   ) : null;
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={disabled}
-      // activeOpacity={0.7}
-      className={`flex-row items-center justify-center rounded-full px-6 py-3 
-        ${isPrimary ? `bg-${bgColor}` : `border border-${borderColor}`} 
-        ${disabled ? "opacity-50" : ""} 
-        ${className}`}
-      style={containerStyle}
-    >
+<TouchableOpacity
+  onPress={onPress}
+  disabled={disabled}
+  className={`w-full flex-row items-center justify-center rounded-full px-6 py-3 
+    ${isPrimary ? `bg-${bgColor}` : `border`} 
+    ${disabled ? "opacity-50" : ""} 
+    ${className}`}
+style={[
+  containerStyle,
+  !isPrimary && borderColor
+    ? { borderColor: "#FF8C00", borderWidth: 2 } // ← set your secondary-500 color here
+    : {}
+]}
+
+>
       {iconPlacement === "left" && iconContent && (
         <View className="mr-1">{iconContent}</View>
       )}

@@ -51,7 +51,8 @@ export default function AppAlert({
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View className="flex-1 items-center justify-center bg-black/40">
+      <View className="absolute inset-0 w-full h-full items-center justify-center bg-black/0">
+
 
         {/* TOAST */}
         {type === "toast" && (
