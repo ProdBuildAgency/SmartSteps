@@ -96,7 +96,7 @@ export default function RegisterScreen() {
                 <View className={`px-[4px] py-[2px] items-center justify-center mx-2 rounded-md
     ${selectedRole === "Business" ? "bg-primary-400" : "border-b-[1px]"}`}>
                   <Text
-                    className={`font-poppins font-medium text-[16px] ${selectedRole === "Business" ? "text-white" : "text-textSecondary"
+                    className={`font-poppins font-bold text-[16px] ${selectedRole === "Business" ? "text-white" : "text-textSecondary"
                       }`}
                     style={{
                       textDecorationColor:
@@ -115,7 +115,7 @@ export default function RegisterScreen() {
                 <View className={` px-[4px] py-[2px] items-center rounded-md justify-center mx-2
     ${selectedRole === "Individual" ? "bg-primary-400" : "border-b-[1px]"}`}>
                   <Text
-                    className={`font-poppins font-medium text-[16px] ${selectedRole === "Individual" ? "text-white" : "text-textSecondary"
+                    className={`font-poppins font-bold text-[16px] ${selectedRole === "Individual" ? "text-white" : "text-textSecondary"
                       }`}
                     style={{
 
