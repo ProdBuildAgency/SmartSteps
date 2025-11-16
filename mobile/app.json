@@ -2,7 +2,7 @@
   "expo": {
     "name": "Smart Steps",
     "slug": "smart_steps",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/main_logo.png",
     "scheme": "smartsteps",
@@ -18,7 +18,8 @@
         "monochromeImage": "./assets/images/main_logo.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.prodbuild.smart_steps"
     },
     "web": {
       "output": "static",
@@ -44,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "37795351-cf05-4ff2-a73c-96c52611c05b"
+      }
     }
   }
 }
