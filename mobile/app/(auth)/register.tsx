@@ -89,40 +89,49 @@ export default function RegisterScreen() {
           {/* ✅ Role Selector (hidden after step > 0) */}
           {!hideRoleSelector && (
             <View className="flex-row justify-center mt-3">
-              <TouchableOpacity
-                className={`px-4 py-2 mx-2 rounded-lg ${selectedRole === "Business"
-                    ? "bg-primary-400"
-                    : "border-b-[1px] border-textSecondary"
-                  }`}
-                onPress={() => setSelectedRole("Business")}
-              >
-                <Text
-                  className={`font-medium ${selectedRole === "Business"
-                      ? "text-white"
-                      : "text-textSecondary"
-                    }`}
-                >
-                  Business
-                </Text>
+
+              {/* BUSINESS BUTTON */}
+
+              <TouchableOpacity onPress={() => setSelectedRole("Business")} className="`w-[79px] h-[26px] ">
+                <View className={`px-[4px] py-[2px] items-center justify-center mx-2 rounded-md
+    ${selectedRole === "Business" ? "bg-primary-400" : "border-b-[1px]"}`}>
+                  <Text
+                    className={`font-poppins font-medium text-[16px] ${selectedRole === "Business" ? "text-white" : "text-textSecondary"
+                      }`}
+                    style={{
+                      textDecorationColor:
+                        selectedRole !== "Business" ? "#A1A1A1" : "transparent",
+
+                    }}
+                  >
+                    Business
+                  </Text>
+                </View>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                className={`px-4 py-2 mx-2 rounded-lg ${selectedRole === "Individual"
-                    ? "bg-primary-500"
-                    : "border-b-[1px] border-textSecondary"
-                  }`}
-                onPress={() => setSelectedRole("Individual")}
-              >
-                <Text
-                  className={`font-medium ${selectedRole === "Individual"
-                      ? "text-white"
-                      : "text-textSecondary"
-                    }`}
-                >
-                  Individual
-                </Text>
+
+              {/* INDIVIDUAL BUTTON */}
+              <TouchableOpacity onPress={() => setSelectedRole("Individual")} className="`w-[88px] h-[26px] ">
+                <View className={` px-[4px] py-[2px] items-center rounded-md justify-center mx-2
+    ${selectedRole === "Individual" ? "bg-primary-400" : "border-b-[1px]"}`}>
+                  <Text
+                    className={`font-poppins font-medium text-[16px] ${selectedRole === "Individual" ? "text-white" : "text-textSecondary"
+                      }`}
+                    style={{
+
+                      textDecorationColor:
+                        selectedRole !== "Individual" ? "#A1A1A1" : "transparent",
+
+                    }}
+                  >
+                    Individual
+                  </Text>
+                </View>
               </TouchableOpacity>
+
+
             </View>
+
           )}
 
           {/* ✅ Pass step and setStep to forms */}

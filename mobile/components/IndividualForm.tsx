@@ -122,7 +122,7 @@ export default function IndividualForm({ setIsLoading, step, setStep }: Individu
             />
 
             <CustomInput
-              label="Email address"
+              label="Email Address"
               required
               placeholder="Enter Email Address"
               keyboardType="email-address"
