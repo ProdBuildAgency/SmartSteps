@@ -6,6 +6,7 @@ import CustomInput from "./ui/CustomInput";
 import { useBusinessForm } from "@/contexts/RegisterUserContext";
 import { useSession } from "@/contexts/SessionContext";
 import AppAlert from "@/components/ui/AppAlert"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface BusinessFormProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -58,7 +59,7 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
         break;
 
       case 3:
-        if(formData.pincode.length > 6)
+        if (formData.pincode.length > 6)
           return "Pincode not longer than 6.";
         if (!formData.address || !formData.city || !formData.state || !formData.pincode)
           return "Please fill all address fields.";
@@ -140,225 +141,232 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
   };
 
   return (
-    <View className="flex-1">
-      <View className="space-y-4 mt-6 ">
-        {/* STEP 0 — Basic Details */}
-        {step === 0 && (
-          <>
-            <CustomInput
-              label="Full Name"
-              required
-              placeholder="Enter Full Name"
-              value={formData.name}
-              onChangeText={(text) => updateFormData({ name: text })}
-            />
-            <CustomInput
-              label="Email Address"
-              required
-              placeholder="Enter Email Address"
-              keyboardType="email-address"
-              value={formData.email}
-              onChangeText={(text) => updateFormData({ email: text })}
-            />
-            <CustomInput
-              label="Phone Number"
-              required
-              placeholder="Enter Phone Number"
-              keyboardType="phone-pad"
-              value={formData.phoneNumber}
-              onChangeText={(text) => updateFormData({ phoneNumber: text })}
-            />
-          </>
-        )}
+    <KeyboardAwareScrollView
+      contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 0, justifyContent: "flex-start" }}
+      enableOnAndroid
+      keyboardShouldPersistTaps="handled"
+      extraScrollHeight={20}
+    >
+      <View className="flex-1">
+        <View className="space-y-4 mt-6 ">
+          {/* STEP 0 — Basic Details */}
+          {step === 0 && (
+            <>
+              <CustomInput
+                label="Full Name"
+                required
+                placeholder="Enter Full Name"
+                value={formData.name}
+                onChangeText={(text) => updateFormData({ name: text })}
+              />
+              <CustomInput
+                label="Email Address"
+                required
+                placeholder="Enter Email Address"
+                keyboardType="email-address"
+                value={formData.email}
+                onChangeText={(text) => updateFormData({ email: text })}
+              />
+              <CustomInput
+                label="Phone Number"
+                required
+                placeholder="Enter Phone Number"
+                keyboardType="phone-pad"
+                value={formData.phoneNumber}
+                onChangeText={(text) => updateFormData({ phoneNumber: text })}
+              />
+            </>
+          )}
 
-        {/* STEP 1 — Password Setup */}
-        {step === 1 && (
-          <>
-            <CustomInput
-              label="Password"
-              required
-              placeholder="Enter Your Password"
-              secureTextEntry
-              value={formData.password}
-              onChangeText={(text) => updateFormData({ password: text })}
-            />
-            <CustomInput
-              label="Confirm Password"
-              required
-              placeholder="Confirm Your Password"
-              secureTextEntry
-              value={formData.confirmPassword}
-              onChangeText={(text) => updateFormData({ confirmPassword: text })}
-            />
-          </>
-        )}
+          {/* STEP 1 — Password Setup */}
+          {step === 1 && (
+            <>
+              <CustomInput
+                label="Password"
+                required
+                placeholder="Enter Your Password"
+                secureTextEntry
+                value={formData.password}
+                onChangeText={(text) => updateFormData({ password: text })}
+              />
+              <CustomInput
+                label="Confirm Password"
+                required
+                placeholder="Confirm Your Password"
+                secureTextEntry
+                value={formData.confirmPassword}
+                onChangeText={(text) => updateFormData({ confirmPassword: text })}
+              />
+            </>
+          )}
 
-        {/* STEP 2 — Preschool Basic Info */}
-        {step === 2 && (
-          <>
+          {/* STEP 2 — Preschool Basic Info */}
+          {step === 2 && (
+            <>
 
-            <CustomInput
-              label="Name"
-              required
-              placeholder="Enter Preschool Name"
-              value={formData.businessName}
-              onChangeText={(text) => updateFormData({ businessName: text })}
-            />
-          </>
-        )}
+              <CustomInput
+                label="Name"
+                required
+                placeholder="Enter Preschool Name"
+                value={formData.businessName}
+                onChangeText={(text) => updateFormData({ businessName: text })}
+              />
+            </>
+          )}
 
-        {/* STEP 3 — Address Info */}
-        {step === 3 && (
-          <>
+          {/* STEP 3 — Address Info */}
+          {step === 3 && (
+            <>
 
-            <CustomInput
-              label="Address"
-              required
-              placeholder="Enter Preschool Address"
-              value={formData.address}
-              onChangeText={(text) => updateFormData({ address: text })}
-            />
-            <View className="flex-row gap-x-4">
-              <View className="flex-1">
-                <CustomInput
-                  label="City"
-                  required
-                  placeholder="Enter City"
-                  value={formData.city}
-                  onChangeText={(text) => updateFormData({ city: text })}
-                />
+              <CustomInput
+                label="Address"
+                required
+                placeholder="Enter Preschool Address"
+                value={formData.address}
+                onChangeText={(text) => updateFormData({ address: text })}
+              />
+              <View className="flex-row gap-x-4">
+                <View className="flex-1">
+                  <CustomInput
+                    label="City"
+                    required
+                    placeholder="Enter City"
+                    value={formData.city}
+                    onChangeText={(text) => updateFormData({ city: text })}
+                  />
+                </View>
+                <View className="flex-1">
+                  <CustomInput
+                    label="State"
+                    required
+                    placeholder="Enter State"
+                    value={formData.state}
+                    onChangeText={(text) => updateFormData({ state: text })}
+                  />
+                </View>
               </View>
-              <View className="flex-1">
-                <CustomInput
-                  label="State"
-                  required
-                  placeholder="Enter State"
-                  value={formData.state}
-                  onChangeText={(text) => updateFormData({ state: text })}
-                />
+              <CustomInput
+                label="Pincode"
+                required
+                placeholder="Enter Pincode"
+                keyboardType="number-pad"
+                value={formData.pincode}
+                onChangeText={(text) => updateFormData({ pincode: text })}
+              />
+            </>
+          )}
+
+          {/* STEP 4 — Preschool Details */}
+          {step === 4 && (
+            <>
+
+              <Text className="text-textSecondary font-medium mb-1">
+                Number of Preschoolers <Text className="text-primary-500">*</Text>
+              </Text>
+              <View className="flex-row gap-x-4">
+                <View className="flex-1">
+                  <CustomInput
+                    label="PG"
+                    required
+                    placeholder="PG"
+                    keyboardType="number-pad"
+                    value={formData.preschoolersPg}
+                    onChangeText={(text) => updateFormData({ preschoolersPg: text })}
+                  />
+                </View>
+                <View className="flex-1">
+                  <CustomInput
+                    label="Nursery"
+                    required
+                    placeholder="NUR"
+                    keyboardType="number-pad"
+                    value={formData.preschoolersNur}
+                    onChangeText={(text) => updateFormData({ preschoolersNur: text })}
+                  /></View>
+                <View className="flex-1">
+                  <CustomInput
+                    label="Jr. KG"
+                    required
+                    placeholder="JKG"
+                    keyboardType="number-pad"
+                    value={formData.preschoolersJkg}
+                    onChangeText={(text) => updateFormData({ preschoolersJkg: text })}
+                  /></View>
+                <View className="flex-1">
+                  <CustomInput
+                    label="Sr. KG"
+                    required
+                    placeholder="SKG"
+                    keyboardType="number-pad"
+                    value={formData.preschoolersSkg}
+                    onChangeText={(text) => updateFormData({ preschoolersSkg: text })}
+                  /></View>
               </View>
-            </View>
-            <CustomInput
-              label="Pincode"
-              required
-              placeholder="Enter Pincode"
-              keyboardType="number-pad"
-              value={formData.pincode}
-              onChangeText={(text) => updateFormData({ pincode: text })}
-            />
-          </>
-        )}
 
-        {/* STEP 4 — Preschool Details */}
-        {step === 4 && (
-          <>
-
-            <Text className="text-textSecondary font-medium mb-1">
-              Number of Preschoolers <Text className="text-primary-500">*</Text>
-            </Text>
-            <View className="flex-row gap-x-4">
-              <View className="flex-1">
-                <CustomInput
-                  label="PG"
-                  required
-                  placeholder="PG"
-                  keyboardType="number-pad"
-                  value={formData.preschoolersPg}
-                  onChangeText={(text) => updateFormData({ preschoolersPg: text })}
-                />
+              <Text className="text-textSecondary font-medium mt-[12px]">
+                Fee Range <Text className="text-primary-500">*</Text>
+              </Text>
+              <View className="flex-row gap-x-4">
+                <View className="flex-1">
+                  <CustomInput
+                    label="Min"
+                    required
+                    placeholder="Min"
+                    keyboardType="number-pad"
+                    value={formData.feeRangeMin}
+                    onChangeText={(text) => updateFormData({ feeRangeMin: text })}
+                  /></View>
+                <View className="flex-1">
+                  <CustomInput
+                    label="Max"
+                    required
+                    placeholder="Max"
+                    keyboardType="number-pad"
+                    value={formData.feeRangeMax}
+                    onChangeText={(text) => updateFormData({ feeRangeMax: text })}
+                  /></View>
               </View>
-              <View className="flex-1">
-                <CustomInput
-                  label="Nursery"
-                  required
-                  placeholder="NUR"
-                  keyboardType="number-pad"
-                  value={formData.preschoolersNur}
-                  onChangeText={(text) => updateFormData({ preschoolersNur: text })}
-                /></View>
-              <View className="flex-1">
-                <CustomInput
-                  label="Jr. KG"
-                  required
-                  placeholder="JKG"
-                  keyboardType="number-pad"
-                  value={formData.preschoolersJkg}
-                  onChangeText={(text) => updateFormData({ preschoolersJkg: text })}
-                /></View>
-              <View className="flex-1">
-                <CustomInput
-                  label="Sr. KG"
-                  required
-                  placeholder="SKG"
-                  keyboardType="number-pad"
-                  value={formData.preschoolersSkg}
-                  onChangeText={(text) => updateFormData({ preschoolersSkg: text })}
-                /></View>
-            </View>
-
-            <Text className="text-textSecondary font-medium mt-[12px]">
-              Fee Range <Text className="text-primary-500">*</Text>
-            </Text>
-            <View className="flex-row gap-x-4">
-              <View className="flex-1">
-                <CustomInput
-                  label="Min"
-                  required
-                  placeholder="Min"
-                  keyboardType="number-pad"
-                  value={formData.feeRangeMin}
-                  onChangeText={(text) => updateFormData({ feeRangeMin: text })}
-                /></View>
-              <View className="flex-1">
-                <CustomInput
-                  label="Max"
-                  required
-                  placeholder="Max"
-                  keyboardType="number-pad"
-                  value={formData.feeRangeMax}
-                  onChangeText={(text) => updateFormData({ feeRangeMax: text })}
-                /></View>
-            </View>
-          </>
-        )}
-      </View>
-
-      {/* Step Navigation */}
-      <StepNavigator
-        step={step}
-        totalSteps={totalSteps}
-        onBack={handleBack}
-        onNext={handleNext}
-      />
-      {/* footer */}
-      {step === 0 && (
-        <View className="mt-4 mb-6">
-          <Text className="text-center text-gray-700">
-            Already have an Account?{" "}
-            <Text
-              className="text-accent-600 font-semibold"
-              onPress={() => router.push("/(auth)/login")}
-            >
-              Login
-            </Text>
-          </Text>
+            </>
+          )}
         </View>
-      )}
+
+        {/* Step Navigation */}
+        <StepNavigator
+          step={step}
+          totalSteps={totalSteps}
+          onBack={handleBack}
+          onNext={handleNext}
+        />
+        {/* footer */}
+        {step === 0 && (
+          <View className="mt-4 mb-6">
+            <Text className="text-center text-gray-700">
+              Already have an Account?{" "}
+              <Text
+                className="text-accent-600 font-semibold"
+                onPress={() => router.push("/(auth)/login")}
+              >
+                Login
+              </Text>
+            </Text>
+          </View>
+        )}
 
 
 
-      <AppAlert
-        visible={alertVisible}
-        type="toast"
-        autoClose={1000}
-        message={alertMessage}
-        onPrimary={hideAlert}
-        onError={true}
-        onClose={hideAlert}
-      />
+        <AppAlert
+          visible={alertVisible}
+          type="toast"
+          autoClose={1000}
+          message={alertMessage}
+          onPrimary={hideAlert}
+          onError={true}
+          onClose={hideAlert}
+        />
 
 
 
-    </View>
+      </View>
+    </KeyboardAwareScrollView>
   );
 }

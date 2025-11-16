@@ -11,7 +11,7 @@ import LoadingOverlay from "@/components/LoadingOverlay";
 import CustomInput from "@/components/ui/CustomInput";
 import CustomButton from "@/components/ui/CustomButton";
 import AppAlert from "@/components/ui/AppAlert";
-
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSession } from "@/contexts/SessionContext";
 import { useLoginForm } from "@/contexts/LoginUserContext";
 
@@ -86,9 +86,12 @@ export default function LoginScreen() {
 
   return (
     <View className="flex-1">
-      <ScrollView
+      <KeyboardAwareScrollView
         className="flex-1 bg-secondary-500"
         contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+        enableOnAndroid
+        keyboardShouldPersistTaps="handled"
+        extraScrollHeight={20}
       >
         {/* Illustration */}
         <View className="items-center mt-8">
@@ -155,7 +158,7 @@ export default function LoginScreen() {
             </Text>
           </View>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
       {isLoading && <LoadingOverlay />}
 
