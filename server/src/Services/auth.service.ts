@@ -77,7 +77,7 @@ export class AuthService {
             newBusiness = await prisma.businesses.create({
                 data: {
                     owner_user_id: newUser.id,
-                    name: validatedUser.name,
+                    name: validatedBusiness.name,
                     address: validatedBusiness.address,
                     city: validatedBusiness.city,
                     state: validatedBusiness.state,
@@ -108,7 +108,7 @@ export class AuthService {
             },
             business: newBusiness
                 ? {
-                    name: newBusiness.name,
+                    businessName: newBusiness.name,
                 }
                 : undefined,
         };
