@@ -52,6 +52,15 @@ Product Tags
 POST   /products/:id/tags    {tag_ids: []}
 DELETE /products/:id/tags/:tag_id
 
+
+__________________________________________________________________
+User Address --schema needed
+POST /addresses   {user_id, line1, line2, city, state, zip, country, is_default}
+GET  /addresses?user_id=
+GET  /addresses/:id
+PUT  /addresses/:id
+DELETE /addresses/:id
+
 Orders
 POST   /orders    {items: [{product_id, qty}], address, delivery_estimate, payment_method}
 GET    /orders?user_id=&status=
@@ -62,11 +71,6 @@ Order Items
 GET    /orders/:id/items
 GET    /order-items/:id
 
-Payments
-POST /payments/create-intent {order_id}
-POST /payments/webhook (handle status)
-GET    /payments/:order_id/status
-
 Delivery
 GET /orders/:id/delivery (returns days windows)
 PATCH /deliveries/:id/status (admin)
@@ -76,6 +80,14 @@ GET    /library          (for current user)
 GET    /library/:product_id
 POST   /library/add          (admin/manual add)
 DELETE /library/:product_id    (remove access)
+__________________________________________________________________
+
+
+Payments
+POST /payments/create-intent {order_id}
+POST /payments/webhook (handle status)
+GET    /payments/:order_id/status
+
 
 Uploads/Media
 POST   /upload/presign     {file_name, file_type} → returns presigned S3 URL
