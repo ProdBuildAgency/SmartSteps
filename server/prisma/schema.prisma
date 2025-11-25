@@ -75,12 +75,14 @@ model orders {
   status            Int           @db.SmallInt
   payment_provider  String?
   payment_reference String?
-  shipping_address  Json?
   delivery_estimate Json?
   created_at        DateTime?     @default(now()) @db.Timestamptz(6)
   updated_at        DateTime?     @default(now()) @db.Timestamptz(6)
   order_items       order_items[]
   users             users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deliveryAddressId String? @db.Uuid
+
+  deliveryAddress   DeliveryAddress? @relation(fields: [deliveryAddressId], references: [id])
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -145,4 +147,30 @@ model users {
   businesses    businesses[]
   children      children[]
   orders        orders[]
+
+  addresses DeliveryAddress[]
+}
+
+model DeliveryAddress {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String   @db.Uuid
+  fullName    String
+  phone       String
+  addressLine1 String
+  addressLine2 String?
+  city        String
+  state       String
+  pincode     String
+  country     String   @default("India")
+  landmark    String?
+  isDefault   Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  user        users     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  orders orders[]
 }

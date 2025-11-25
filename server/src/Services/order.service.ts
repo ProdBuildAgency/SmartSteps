@@ -13,56 +13,69 @@ export class OrderService {
 
     static async create(data: OrderRequest, items: OrderItemRequest[]): Promise<OrderResponse> {
 
-        if (!data.user_id || !data.total_price) {
-            throw new AppError("user id and price are required fields.", 400);
-        }
-        const result = await prisma.$transaction(async (tx: any) => {
-            const totalPrice = items.reduce((sum, item) => sum + item.total_price, 0);
-            const newOrder = await prisma.orders.create({
-                data: {
-                    user_id: data.user_id,
-                    total_price: totalPrice,
-                    currency: data.currency,
-                    status: data.status,
-                    payment_provider: data.payment_provider ?? "",
-                    payment_reference: data.payment_reference,
-                    shipping_address: data.shipping_address,
-                    delivery_estimate: data.delivery_estimate,
-
-                    order_items: {
-                        create: items.map((item) => ({
-                            product_id: item.product_id,
-                            quantity: item.quantity,
-                            unit_price: item.unit_price,
-                            total_price: item.total_price,
-                        })),
-                    },
-                },
-                include: {
-                    order_items: true
-                }
-            })
-
-            const response: OrderResponse = {
-                id: newOrder.id,
-                user_id: newOrder.user_id,
-                total_price: newOrder.total_price,
-                currency: newOrder.currency ?? "",
-                status: newOrder.status,
-                payment_provider: newOrder.payment_provider,
-                payment_reference: newOrder.payment_reference,
-                shipping_address: newOrder.shipping_address,
-                delivery_estimate: newOrder.delivery_estimate,
-                created_at: newOrder.created_at,
-                updated_at: newOrder.updated_at,
-                order_items: newOrder.order_items
-            }
-            return response;
-        })
-
-        return result;
-        
+    if (!data.user_id || !data.total_price) {
+        throw new AppError("user id and price are required fields.", 400);
     }
+
+    const result = await prisma.$transaction(async (tx: any) => {
+
+        const totalPrice = items.reduce((sum, item) => sum + item.total_price, 0);
+
+        const newOrder = await prisma.orders.create({
+            data: {
+                user_id: data.user_id,
+                deliveryAddressId: data.deliveryAddressId ?? null,   // ✅ added
+
+                total_price: totalPrice,
+                currency: data.currency ?? "INR",
+                status: data.status,
+
+                payment_provider: data.payment_provider ?? "",
+                payment_reference: data.payment_reference ?? null,
+
+                delivery_estimate: data.delivery_estimate ?? null,   // ⬅ keep if you use it
+
+                order_items: {
+                    create: items.map((item) => ({
+                        product_id: item.product_id,
+                        quantity: item.quantity,
+                        unit_price: item.unit_price,
+                        total_price: item.total_price,
+                    })),
+                },
+            },
+            include: {
+                order_items: true,
+                deliveryAddress: true,   // ✅ optional: preload address
+            },
+        });
+
+        const response: OrderResponse = {
+            id: newOrder.id,
+            user_id: newOrder.user_id,
+            total_price: newOrder.total_price,
+            currency: newOrder.currency ?? "INR",
+            status: newOrder.status,
+
+            payment_provider: newOrder.payment_provider ?? "",
+            payment_reference: newOrder.payment_reference ?? null,
+
+            // ❌ removed shipping_address
+            deliveryAddress: newOrder.deliveryAddress ?? null,  // ✅ added
+
+            delivery_estimate: newOrder.delivery_estimate,
+
+            created_at: newOrder.created_at,
+            updated_at: newOrder.updated_at,
+            order_items: newOrder.order_items,
+        };
+
+        return response;
+    });
+
+    return result;
+}
+
 
     /**
      * Get all orders (with optional filters)

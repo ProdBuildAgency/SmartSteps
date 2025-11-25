@@ -4,6 +4,8 @@ import { OrderStatus } from "../../Enums";
 export const OrderSchema = z.object({
   user_id: z.string().uuid("User Id for Order is required").optional(),
 
+  deliveryAddressId: z.string().uuid("Invalid delivery address ID").optional(),  
+
   total_price: z.number("Total price is required",).int("Total price must be an integer"),
 
   currency: z.string().max(3).default("INR"),
@@ -13,8 +15,6 @@ export const OrderSchema = z.object({
   payment_provider: z.string().optional(),
 
   payment_reference: z.string().optional(),
-
-  shipping_address: z.any().optional(), 
 
   delivery_estimate: z.any().optional(), 
 });

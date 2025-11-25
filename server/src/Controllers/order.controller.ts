@@ -20,6 +20,8 @@ export class OrderController {
      * POST /orders
      */
     static async create(req: AuthenticatedRequest, res: Response) {
+
+        // Todo:  how does parse work does it automatically extract the data from the request according to the schema?
         const orderParsed = OrderSchema.safeParse(req.body);
         const itemParsed = OrderItemSchema.safeParse(req.body);
         if (!orderParsed.success) {

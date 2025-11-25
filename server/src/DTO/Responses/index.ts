@@ -8,3 +8,4 @@ export * from './product.response';
 export * from './productAssets.response';
 export * from './order.response';
 export * from './orderItem.response'
+export * from './deliverAddress.response'
