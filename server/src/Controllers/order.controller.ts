@@ -11,6 +11,7 @@ import { OrderService } from "../Services";
 import { AuthenticatedRequest } from "../Middlewares";
 import { OrderResponse } from "../DTO/Responses";
 import { Role } from "../Enums";
+import { OrderItemRequest, OrderItemSchema } from "../DTO/Requests/orderItem.request";
 
 export class OrderController {
 
@@ -19,9 +20,10 @@ export class OrderController {
      * POST /orders
      */
     static async create(req: AuthenticatedRequest, res: Response) {
-        const parsed = OrderSchema.safeParse(req.body);
-        if (!parsed.success) {
-            throw new AppError("Some data is missing.", 400, parsed.error.issues);
+        const orderParsed = OrderSchema.safeParse(req.body);
+        const itemParsed = OrderItemSchema.safeParse(req.body);
+        if (!orderParsed.success) {
+            throw new AppError("Some data is missing.", 400, orderParsed.error.issues);
         }
 
         if (!req.user || !req.user.id) {
@@ -29,11 +31,14 @@ export class OrderController {
         }
 
         const orderData: OrderRequest = {
-            ...parsed.data,
+            ...orderParsed.data,
             user_id: req.user.id    // ensure order is created for logged-in user
         };
+        const itemsData: OrderItemRequest = {
+            ...itemParsed.data
+        }
 
-        const order = await OrderService.create(orderData);
+        const order = await OrderService.create(orderData, itemsData);
         return res.status(201).json(order);
     }
 
@@ -86,16 +91,16 @@ export class OrderController {
     static async updateStatus(req: AuthenticatedRequest, res: Response) {
         const { id } = req.params;
 
-        const parsed = OrderStatusSchema.safeParse(req.body);
-        if (!parsed.success) {
-            throw new AppError("Invalid request body", 400, parsed.error.issues);
+        const orderParsed = OrderStatusSchema.safeParse(req.body);
+        if (!orderParsed.success) {
+            throw new AppError("Invalid request body", 400, orderParsed.error.issues);
         }
 
         if (!req.user?.id) {
             throw new AppError("Unauthorized access", 401);
         }
 
-        const statusData: OrderStatusRequest = parsed.data;
+        const statusData: OrderStatusRequest = orderParsed.data;
 
         const updatedOrder: OrderResponse = await OrderService.updateStatus(
             id,

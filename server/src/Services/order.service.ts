@@ -6,8 +6,8 @@ import {
 } from "../DTO/Requests";
 import { OrderResponse } from "../DTO/Responses";
 import { OrderStatus, Role } from "../Enums";
-import { OrderItemRequest } from "../DTO/Requests/orderItem.request";
-import { OrderItemResponse } from "../DTO/Responses/orderItem.response";
+import { OrderItemRequest } from "../DTO/Requests";
+import { OrderItemResponse } from "../DTO/Responses";
 
 export class OrderService {
 
@@ -136,11 +136,7 @@ export class OrderService {
     /**
      * Update order status
      */
-    static async updateStatus(
-        id: string,
-        data: OrderStatusRequest,
-        user: { id: string; role: number }
-    ): Promise<OrderResponse> {
+    static async updateStatus(id: string, data: OrderStatusRequest, user: { id: string; role: number }): Promise<OrderResponse> {
 
         const order = await prisma.orders.findUnique({
             where: { id }
