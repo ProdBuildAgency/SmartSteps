@@ -6,3 +6,4 @@ export * from './category.response';
 export * from './tag.response';
 export * from './product.response';
 export * from './productAssets.response';
+export * from './order.response';

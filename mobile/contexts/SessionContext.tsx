@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 
 interface User {
@@ -12,6 +12,7 @@ interface SessionContextType {
   token: string | null;
   login: (token: string, user: User) => Promise<void>;
   logout: () => Promise<void>;
+  restoreSession: () => Promise<void>;
   isLoadingSession: boolean;
 }
 
@@ -22,29 +23,29 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isLoadingSession, setIsLoadingSession] = useState(true);
 
-  useEffect(() => {
-    const loadSession = async () => {
-      try {
-        const storedToken = await SecureStore.getItemAsync("auth_token");
-        const storedUser = await SecureStore.getItemAsync("auth_user");
+  // 🔥 Only restored when RootLayout manually calls restoreSession()
+  const restoreSession = async () => {
+    setIsLoadingSession(true);
 
-        if (storedToken && storedUser) {
-          setToken(storedToken);
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error("Failed to load session:", error);
-      } finally {
-        setIsLoadingSession(false);
+    try {
+      const storedToken = await SecureStore.getItemAsync("auth_token");
+      const storedUser = await SecureStore.getItemAsync("auth_user");
+
+      if (storedToken && storedUser) {
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
       }
-    };
-
-    loadSession();
-  }, []);
+    } catch (error) {
+      console.error("Failed to load session:", error);
+    } finally {
+      setIsLoadingSession(false);
+    }
+  };
 
   const login = async (token: string, user: User) => {
     await SecureStore.setItemAsync("auth_token", token);
     await SecureStore.setItemAsync("auth_user", JSON.stringify(user));
+
     setToken(token);
     setUser(user);
   };
@@ -52,12 +53,22 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     await SecureStore.deleteItemAsync("auth_token");
     await SecureStore.deleteItemAsync("auth_user");
+
     setToken(null);
     setUser(null);
   };
 
   return (
-    <SessionContext.Provider value={{ user, token, login, logout, isLoadingSession }}>
+    <SessionContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        restoreSession,
+        isLoadingSession,
+      }}
+    >
       {children}
     </SessionContext.Provider>
   );

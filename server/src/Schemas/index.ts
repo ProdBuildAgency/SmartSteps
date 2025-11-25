@@ -4,3 +4,4 @@ export * from './category';
 export * from './tag';
 export * from './productFilters'
 export * from './fileSchema'
+export * from './order'

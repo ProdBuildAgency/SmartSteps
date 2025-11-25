@@ -5,3 +5,4 @@ export * from './tag.service';
 export * from './product.service';
 export * from './productAssets.sevice';
 export * from './productTags.service';
+export * from './order.service'
