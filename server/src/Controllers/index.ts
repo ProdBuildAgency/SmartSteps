@@ -5,3 +5,4 @@ export * from './tag.controller';
 export * from './product.controller';
 export * from './productAssets.controller';
 export * from './productTags.controller';
+export * from './order.controller'

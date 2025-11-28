@@ -12,3 +12,7 @@ export * from './productStatus.request';
 export * from './productTags.request';
 export * from './productUpdate.request';
 export * from  './productAssetsStatus.request'
+export * from './orderStatus.request'
+export * from './order.request'
+export * from './orderItem.request'
+export * from './deliveryAddress.request'
