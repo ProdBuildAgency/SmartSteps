@@ -1,0 +1,49 @@
+name: Ping Backend
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * *" # Runs everyday at 1 AM
+
+jobs:
+  hit-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call BACKEND_URL with retry logic
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+        run: |
+          echo "Attempting to hit backend: $BACKEND_URL"
+
+          success=false
+
+          for i in {1..3}; do
+            echo "----------------------------------------"
+            echo "Attempt $i at: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+
+            status=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL")
+
+            if [ "$status" -eq 200 ]; then
+              echo "Status: SUCCESS (HTTP $status)"
+              success=true
+              break
+            else
+              echo "Status: FAILED (HTTP $status)"
+            fi
+
+            sleep 5
+          done
+
+          if [ "$success" = false ]; then
+            echo "All retries failed. Exiting workflow."
+            exit 1
+          fi
+
+      - name: Call BACKEND_URL/ping after success
+        if: success()  # Only runs if previous step succeeded
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+        run: |
+          echo "Calling ping endpoint..."
+          curl -X GET "$BACKEND_URL/ping"
