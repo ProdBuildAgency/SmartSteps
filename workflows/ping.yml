@@ -2,8 +2,8 @@ name: Daily Scheduled Update
 
 on:
   schedule:
-    - cron: "0 1 * * *"
-  workflow_dispatch:       
+    - cron: "0 1 * * *"   # run every day at 1 AM UTC
+  workflow_dispatch:
 
 jobs:
   trigger:
@@ -11,4 +11,7 @@ jobs:
 
     steps:
       - name: Call backend update endpoint
-        run: curl -X GET "https://your-domain.com/cron/update?key=${{ secrets.CRON_KEY }}"
+        run: curl -X GET "$DATABASE_URL/cron/update?key=${{ secrets.CRON_KEY }}"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CRON_KEY: ${{ secrets.CRON_KEY }}
