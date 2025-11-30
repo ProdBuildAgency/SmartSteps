@@ -7,25 +7,36 @@ export class DeliveryAddressController {
     // -------------------------------------------------
     // CREATE
     // -------------------------------------------------
-    static async create(req: Request, res: Response, next: NextFunction) {
+static async create(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!(req as any).user) throw new AppError("Unauthorized", 401);
 
-            const parsed = DeliveryAddressSchema.safeParse(req.body);
-            if (!parsed.success) {
-                throw new AppError("Some Data is missing.", 400, parsed.error.issues)
-            }
+    // Inject userId from req.user
+    const bodyWithUserId = {
+      ...req.body,
+      userId: (req as any).user.id,
+    };
 
-            const address = parsed.data;
-            const result = await DeliveryAddressService.create(address);
-            return res.status(201).json(result);
+    const parsed = DeliveryAddressSchema.safeParse(bodyWithUserId);
 
+    if (!parsed.success) {
+      throw new AppError("Some Data is missing.", 400, parsed.error.issues);
     }
+
+    const result = await DeliveryAddressService.create(parsed.data);
+    return res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
 
   // -------------------------------------------------
   // GET ALL FOR USER
   // -------------------------------------------------
   static async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = req.user.id;
+            const userId = (req as any).user.id;
 
             const addresses = await DeliveryAddressService.getAll(userId);
 
@@ -43,7 +54,7 @@ export class DeliveryAddressController {
     // -------------------------------------------------
     static async getById(req: Request, res: Response, next: NextFunction) {
         try {
-            const userId = req.user.id;
+            const userId = (req as any).user.id;
             const { id } = req.params;
 
             const address = await DeliveryAddressService.getById(id, userId);
@@ -63,7 +74,7 @@ export class DeliveryAddressController {
     static async update(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params;
-            const userId = req.user.id;
+            const userId = (req as any).user.id;
 
             // partial validation allowed
             const parsed = DeliveryAddressSchema.partial().parse(req.body);
@@ -85,7 +96,7 @@ export class DeliveryAddressController {
     static async setDefault(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params;
-            const userId = req.user.id;
+            const userId = (req as any).user.id;
 
             await DeliveryAddressService.setDefault(id, userId);
 
@@ -103,7 +114,7 @@ export class DeliveryAddressController {
     static async delete(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params;
-            const userId = req.user.id;
+            const userId = (req as any).user.id;
 
             await DeliveryAddressService.delete(id, userId);
 
