@@ -14,12 +14,12 @@ export interface BusinessFormData {
   state: string;
   city: string;
   pincode: string;
-  preschoolersPg: string;
-  preschoolersNur: string;
-  preschoolersJkg: string;
-  preschoolersSkg: string;
-  feeRangeMin: string;
-  feeRangeMax: string;
+  preschoolersPg?: string;
+  preschoolersNur?: string;
+  preschoolersJkg?: string;
+  preschoolersSkg?: string;
+  feeRangeMin?: string;
+  feeRangeMax?: string;
 }
 
 const defaultBusinessData: BusinessFormData = {
@@ -34,12 +34,12 @@ const defaultBusinessData: BusinessFormData = {
   state: "",
   city: "",
   pincode: "",
-  preschoolersPg: "",
-  preschoolersNur: "",
-  preschoolersJkg: "",
-  preschoolersSkg: "",
-  feeRangeMin: "",
-  feeRangeMax: "",
+  preschoolersPg: "0",
+  preschoolersNur: "0",
+  preschoolersJkg: "0",
+  preschoolersSkg: "0",
+  feeRangeMin: "0",
+  feeRangeMax: "0",
 };
 
 interface BusinessFormContextProps {
@@ -74,12 +74,12 @@ export const BusinessFormProvider = ({ children }: { children: ReactNode }) => {
 
     const payload = {
       ...formData,
-      preschoolersPg: Number(formData.preschoolersPg),
-      preschoolersNur: Number(formData.preschoolersNur),
-      preschoolersJkg: Number(formData.preschoolersJkg),
-      preschoolersSkg: Number(formData.preschoolersSkg),
-      feeRangeMin: Number(formData.feeRangeMin),
-      feeRangeMax: Number(formData.feeRangeMax),
+      preschoolersPg: Number(formData?.preschoolersPg) || 0,
+      preschoolersNur: Number(formData?.preschoolersNur) || 0,
+      preschoolersJkg: Number(formData?.preschoolersJkg) || 0,
+      preschoolersSkg: Number(formData?.preschoolersSkg) || 0,
+      feeRangeMin: Number(formData?.feeRangeMin) || 0,
+      feeRangeMax: Number(formData?.feeRangeMax) || 0,
     };
 
     const response = await axios.post(`${businessBackendUrl}/api/v1/auth/register`, payload, {

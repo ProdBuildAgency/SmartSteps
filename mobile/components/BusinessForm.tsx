@@ -164,7 +164,7 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
                 required
                 placeholder="Enter Email Address"
                 keyboardType="email-address"
-                value={formData.email}
+                value={formData.email?.toLowerCase()}
                 onChangeText={(text) => updateFormData({ email: text })}
               />
               <CustomInput
@@ -261,13 +261,12 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
             <>
 
               <Text className="text-textSecondary font-medium mb-1">
-                Number of Preschoolers <Text className="text-primary-500">*</Text>
+                Number of Preschoolers
               </Text>
               <View className="flex-row gap-x-4">
                 <View className="flex-1">
                   <CustomInput
                     label="PG"
-                    required
                     placeholder="PG"
                     keyboardType="number-pad"
                     value={formData.preschoolersPg}
@@ -277,7 +276,6 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
                 <View className="flex-1">
                   <CustomInput
                     label="Nursery"
-                    required
                     placeholder="NUR"
                     keyboardType="number-pad"
                     value={formData.preschoolersNur}
@@ -286,7 +284,6 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
                 <View className="flex-1">
                   <CustomInput
                     label="Jr. KG"
-                    required
                     placeholder="JKG"
                     keyboardType="number-pad"
                     value={formData.preschoolersJkg}
@@ -295,7 +292,6 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
                 <View className="flex-1">
                   <CustomInput
                     label="Sr. KG"
-                    required
                     placeholder="SKG"
                     keyboardType="number-pad"
                     value={formData.preschoolersSkg}
@@ -304,13 +300,12 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
               </View>
 
               <Text className="text-textSecondary font-medium mt-[12px]">
-                Fee Range <Text className="text-primary-500">*</Text>
+                Fee Range
               </Text>
               <View className="flex-row gap-x-4">
                 <View className="flex-1">
                   <CustomInput
                     label="Min"
-                    required
                     placeholder="Min"
                     keyboardType="number-pad"
                     value={formData.feeRangeMin}
@@ -319,7 +314,6 @@ export default function BusinessForm({ setIsLoading, step, setStep }: BusinessFo
                 <View className="flex-1">
                   <CustomInput
                     label="Max"
-                    required
                     placeholder="Max"
                     keyboardType="number-pad"
                     value={formData.feeRangeMax}
