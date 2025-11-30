@@ -6,7 +6,7 @@ export const OrderSchema = z.object({
 
   deliveryAddressId: z.string().uuid("Invalid delivery address ID").optional(),  
 
-  total_price: z.number("Total price is required",).int("Total price must be an integer"),
+  total_price: z.number().int().optional(),
 
   currency: z.string().max(3).default("INR"),
 

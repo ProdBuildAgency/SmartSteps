@@ -6,11 +6,13 @@ import tagRoutes from './tag.routes';
 import productRoutes from './product.routes'
 import productAssetsRoutes from './productAssets.routes'
 import productTagsRoutes from './productTags.routes'
+import orderRoutes from './order.routes';
 
 const router = express.Router();
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/category', categoryRoutes);
+router.use('/orders', orderRoutes)
 router.use('/tag', tagRoutes);
 router.use('/products', productRoutes);
 router.use('/products/:id/assets', productAssetsRoutes);
