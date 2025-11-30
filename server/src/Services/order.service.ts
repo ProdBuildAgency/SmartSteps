@@ -12,69 +12,82 @@ import { OrderItemResponse } from "../DTO/Responses";
 export class OrderService {
 
     static async create(data: OrderRequest, items: OrderItemRequest[]): Promise<OrderResponse> {
+        if (!data.user_id) {
+            throw new AppError("user id is a required field.", 400);
+        }
 
-    if (!data.user_id || !data.total_price) {
-        throw new AppError("user id and price are required fields.", 400);
-    }
+        const result = await prisma.$transaction(async (tx) => {
+            // Calculate total_price for each item
+            const preparedItems = items.map((item) => ({
+                ...item,
+                total_price: item.quantity * item.unit_price, // calculate here
+            }));
 
-    const result = await prisma.$transaction(async (tx: any) => {
+            // Calculate total price of the order
+            const totalPrice = preparedItems.reduce(
+                (sum, item) => sum + item.total_price,
+                0
+            );
 
-        const totalPrice = items.reduce((sum, item) => sum + item.total_price, 0);
-
-        const newOrder = await prisma.orders.create({
-            data: {
-                user_id: data.user_id,
-                deliveryAddressId: data.deliveryAddressId ?? null,   // ✅ added
-
-                total_price: totalPrice,
-                currency: data.currency ?? "INR",
-                status: data.status,
-
-                payment_provider: data.payment_provider ?? "",
-                payment_reference: data.payment_reference ?? null,
-
-                delivery_estimate: data.delivery_estimate ?? null,   // ⬅ keep if you use it
-
-                order_items: {
-                    create: items.map((item) => ({
-                        product_id: item.product_id,
-                        quantity: item.quantity,
-                        unit_price: item.unit_price,
-                        total_price: item.total_price,
-                    })),
+            // Create order with items
+            const newOrder = await prisma.orders.create({
+                data: {
+                    user_id: data.user_id,
+                    deliveryAddressId: data.deliveryAddressId ?? null,
+                    total_price: totalPrice,
+                    currency: data.currency ?? "INR",
+                    status: data.status ?? 1, // default to pending
+                    payment_provider: data.payment_provider ?? "",
+                    payment_reference: data.payment_reference ?? null,
+                    delivery_estimate: data.delivery_estimate ?? null,
+                    order_items: {
+                        create: preparedItems.map((item) => ({
+                            product_id: item.product_id,
+                            quantity: item.quantity,
+                            unit_price: item.unit_price,
+                            total_price: item.total_price,
+                        })),
+                    },
                 },
-            },
-            include: {
-                order_items: true,
-                deliveryAddress: true,   // ✅ optional: preload address
-            },
+                include: {
+                    order_items: true,
+                    deliveryAddress: true,
+                },
+            });
+
+            // Map to response type
+            const response: OrderResponse = {
+                id: newOrder.id,
+                user_id: newOrder.user_id,
+                total_price: newOrder.total_price,
+                currency: newOrder.currency ?? "INR",
+                status: newOrder.status,
+                payment_provider: newOrder.payment_provider ?? "",
+                payment_reference: newOrder.payment_reference ?? null,
+                deliveryAddress: newOrder.deliveryAddress ?? null,
+                delivery_estimate: newOrder.delivery_estimate,
+                created_at: newOrder.created_at,
+                updated_at: newOrder.updated_at,
+                order_items: newOrder.order_items.map(
+                    (i) =>
+                    ({
+                        id: i.id,
+                        order_id: i.order_id,
+                        product_id: i.product_id,
+                        quantity: i.quantity,
+                        unit_price: i.unit_price,
+                        total_price: i.total_price,
+                    } as OrderItemResponse)
+                ),
+            };
+
+            return response;
         });
 
-        const response: OrderResponse = {
-            id: newOrder.id,
-            user_id: newOrder.user_id,
-            total_price: newOrder.total_price,
-            currency: newOrder.currency ?? "INR",
-            status: newOrder.status,
+        return result;
+    }
 
-            payment_provider: newOrder.payment_provider ?? "",
-            payment_reference: newOrder.payment_reference ?? null,
 
-            // ❌ removed shipping_address
-            deliveryAddress: newOrder.deliveryAddress ?? null,  // ✅ added
-
-            delivery_estimate: newOrder.delivery_estimate,
-
-            created_at: newOrder.created_at,
-            updated_at: newOrder.updated_at,
-            order_items: newOrder.order_items,
-        };
-
-        return response;
-    });
-
-    return result;
-}
 
 
     /**
@@ -98,7 +111,7 @@ export class OrderService {
     /**
      * Get order by ID with items
      */
-     static async get(id: string): Promise<OrderResponse> {
+    static async get(id: string): Promise<OrderResponse> {
 
         const order = await prisma.orders.findUnique({
             where: { id },
@@ -136,7 +149,7 @@ export class OrderService {
             status: order.status,
             payment_provider: order.payment_provider,
             payment_reference: order.payment_reference,
-            shipping_address: order.shipping_address,
+            deliveryAddress: order.deliveryAddressId ?? null,
             delivery_estimate: order.delivery_estimate,
             created_at: order.created_at,
             updated_at: order.updated_at,

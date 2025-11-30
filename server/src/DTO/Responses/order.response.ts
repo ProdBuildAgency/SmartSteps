@@ -1,6 +1,5 @@
-import { OrderStatus,  } from "../../Enums";
+import { OrderStatus } from "../../Enums";
 import { OrderItemResponse } from "./orderItem.response";
-
 
 export interface OrderResponse {
   id: string;
@@ -12,7 +11,9 @@ export interface OrderResponse {
   payment_provider: string | null;
   payment_reference: string | null;
 
-  shipping_address: any | null;
+
+  deliveryAddress: any | null;
+
   delivery_estimate: any | null;
 
   created_at: string | Date | null;

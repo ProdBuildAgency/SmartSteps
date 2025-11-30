@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { 
-    OrderRequest, 
-    OrderSchema, 
-    OrderStatusRequest, 
-    OrderStatusSchema 
+import {
+    OrderRequest,
+    OrderSchema,
+    OrderStatusRequest,
+    OrderStatusSchema
 } from "../DTO/Requests";
 
 import { AppError } from "../Utilities";
@@ -20,12 +20,15 @@ export class OrderController {
      * POST /orders
      */
     static async create(req: AuthenticatedRequest, res: Response) {
-
-        // Todo:  how does parse work does it automatically extract the data from the request according to the schema?
         const orderParsed = OrderSchema.safeParse(req.body);
-        const itemParsed = OrderItemSchema.safeParse(req.body);
+        const itemsParsed = OrderItemSchema.safeParse(req.body.items);
+
         if (!orderParsed.success) {
-            throw new AppError("Some data is missing.", 400, orderParsed.error.issues);
+            throw new AppError("Some order data is missing.", 400, orderParsed.error.issues);
+        }
+
+        if (!itemsParsed.success) {
+            throw new AppError("Invalid order items.", 400, itemsParsed.error.issues);
         }
 
         if (!req.user || !req.user.id) {
@@ -34,15 +37,16 @@ export class OrderController {
 
         const orderData: OrderRequest = {
             ...orderParsed.data,
-            user_id: req.user.id    // ensure order is created for logged-in user
+            user_id: req.user.id
         };
-        const itemsData: OrderItemRequest = {
-            ...itemParsed.data
-        }
+
+        const itemsData: OrderItemRequest[] = itemsParsed.data;
 
         const order = await OrderService.create(orderData, itemsData);
+
         return res.status(201).json(order);
     }
+
 
     /**
      * Get all orders
