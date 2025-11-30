@@ -1,28 +1,18 @@
-import { Router, Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { Request, Response, NextFunction } from 'express';
+import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
-const ping = Router();
+export class PingController {
+    private static prisma = new PrismaClient();
 
-// GET /users/:id
-ping.get("/users", async (req: Request, res: Response) => {
-  const id = "2faef5a2-374d-44f4-bcaf-fd125580c74a";
+    static async getUser(_req: Request, res: Response, next: NextFunction) {
+        try {
+            const id = process.env.USER_ID;
+            const user = await PingController.prisma.users.findUnique({ where: { id } });
 
-  try {
-    const user = await prisma.users.findUnique({
-      where: { id },
-    });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+            if (!user) return res.status(404).json({ message: 'User not found' });
+            return res.json(user);
+        } catch (err) {
+            next(err);
+        }
     }
-
-    return res.status(200).json(user);
-
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    return res.status(500).json({ message: "Server error" });
-  }
-});
-
-export default ping;
+}
