@@ -1,0 +1,84 @@
+name: Ping Backend
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '5 8 * * *'
+    - cron: '5 23 * * *'
+
+env:
+  API_PATH_BASE: "/ping"
+
+jobs:
+  hit-backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Print run info
+        run: |
+          echo "GitHub Actions run at UTC: $(date -u)"
+          echo "UTC date used for API:"
+          date -u +%Y-%m-%d
+
+      - name: Warm app (allow long startup)
+        run: |
+          BACKEND_URL="${{ secrets.BACKEND_URL }}"
+          if [ -z "$BACKEND_URL" ]; then
+            echo "ERROR: BACKEND_URL secret missing. Set it under repo Settings -> Secrets."
+            exit 1
+          fi
+          echo "Waking app at $BACKEND_URL (max wait 300s)..."
+          if ! curl --max-time 300 -sSf "$BACKEND_URL/" -o /tmp/warm_resp.txt; then
+            echo "Warm-up request failed; saved /tmp/warm_resp.txt for debug"
+            ls -l /tmp/warm_resp.txt || true
+          else
+            echo "Warm-up successful"
+          fi
+          echo "Sleeping 60s to let app finish initialization"
+          sleep 60
+
+
+      - name: Call BACKEND_URL with retry logic
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+          API_PATH_BASE: ${{ env.API_PATH_BASE }}
+        run: |
+          echo "Attempting to hit backend: $BACKEND_URL$API_PATH_BASE"
+          if [ -z "$BACKEND_URL" ]; then
+            echo "ERROR: BACKEND_URL is empty (secret missing?)"
+            exit 1
+          fi
+
+          success=false
+
+          for i in {1..5}; do
+            echo "----------------------------------------"
+            echo "Attempt $i at: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+
+            status=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL$API_PATH_BASE")
+
+            if [ "$status" -eq 200 ]; then
+              echo "Status: SUCCESS (HTTP $status)"
+              success=true
+              break
+            else
+              echo "Status: FAILED (HTTP $status)"
+            fi
+
+            sleep 5
+          done
+
+          if [ "$success" = false ]; then
+            echo "All retries failed. Exiting workflow."
+            exit 1
+          fi
+
+      - name: Upload logs/artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ping-response
+          path: |
+            resp.txt
+            /tmp/warm_resp.txt
