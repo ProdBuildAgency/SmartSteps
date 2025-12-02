@@ -2,12 +2,29 @@ import React, { useEffect, useState } from "react";
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold } from "@expo-google-fonts/poppins";
 import { SplashScreen as ExpoSplashScreen, Stack } from "expo-router";
 import "./global.css";
-import { RegisterUserProvider, SessionProvider } from "@/contexts";
+import { RegisterUserProvider, SessionProvider, useSession } from "@/contexts";
 import SplashScreen from "@/components/ui/SplashScreen";
 import RootNavigator from "@/components/RootNavigator";
 import { LoginProvider } from "@/contexts/LoginUserContext";
 
 ExpoSplashScreen.preventAutoHideAsync();
+
+
+function AppContent() {
+  const { restoreSession } = useSession();
+
+  useEffect(() => {
+    restoreSession();
+  }, []);
+
+  return (
+    <LoginProvider>
+      <RegisterUserProvider>
+        <RootNavigator />
+      </RegisterUserProvider>
+    </LoginProvider>
+  );
+}
 
 export default function RootLayout() {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
@@ -39,14 +56,7 @@ export default function RootLayout() {
 
   return (
     <SessionProvider>
-      <LoginProvider>
-
-        <RegisterUserProvider>
-          <RootNavigator />
-        </RegisterUserProvider>
-
-      </LoginProvider>
+      <AppContent />
     </SessionProvider>
-
   );
 }
