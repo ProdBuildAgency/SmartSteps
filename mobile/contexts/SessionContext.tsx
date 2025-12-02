@@ -23,7 +23,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isLoadingSession, setIsLoadingSession] = useState(true);
 
-  // 🔥 Only restored when RootLayout manually calls restoreSession()
+
   const restoreSession = async () => {
     setIsLoadingSession(true);
 
