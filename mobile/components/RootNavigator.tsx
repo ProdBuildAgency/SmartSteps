@@ -18,7 +18,7 @@ export default function RootNavigator() {
   return (
     <Stack
       screenOptions={{ headerShown: false }}
-      initialRouteName={user ? "(tabs)/home" : "(auth)/login"}
+      initialRouteName={user ? "(tabs)" : "(auth)"}
 
     />
   );
