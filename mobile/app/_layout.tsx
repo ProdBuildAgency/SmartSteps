@@ -6,6 +6,7 @@ import { RegisterUserProvider, SessionProvider, useSession } from "@/contexts";
 import SplashScreen from "@/components/ui/SplashScreen";
 import RootNavigator from "@/components/RootNavigator";
 import { LoginProvider } from "@/contexts/LoginUserContext";
+import { CartProvider } from "@/contexts/CartContext";
 
 ExpoSplashScreen.preventAutoHideAsync();
 
@@ -56,7 +57,9 @@ export default function RootLayout() {
 
   return (
     <SessionProvider>
-      <AppContent />
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
     </SessionProvider>
   );
 }

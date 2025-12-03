@@ -4,8 +4,8 @@ import { View, Text } from "react-native";
 
 export default function Explore() {
   return (
-    <View className="flex-1 justify-center items-center bg-background-950">
-      <Text className="text-h1 text-text-100 font-bold">Services</Text>
+    <View className="flex-1 justify items-center bg-background-950">
+
     </View>
   );
 }

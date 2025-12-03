@@ -1,12 +1,14 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { HouseIcon, DotsNineIcon, StorefrontIcon, UserIcon, House } from "phosphor-react-native";
+import { HouseIcon, DotsNineIcon, StorefrontIcon, UserIcon, House, ShoppingCart } from "phosphor-react-native";
+import { useCart } from "@/contexts/CartContext";
 
 
 
 
 
 export default function TabsLayout() {
+  const { getCartCount } = useCart();
   return (
     <Tabs
       screenOptions={{
@@ -24,9 +26,9 @@ export default function TabsLayout() {
           elevation: 20, // Android shadow
 
           // iOS shadow
-          shadowColor: "#000", 
-          shadowOffset: { width: 0, height: -4 }, 
-          shadowOpacity: 0.9, 
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.9,
           shadowRadius: 8,
         },
         tabBarLabelStyle: {
@@ -72,6 +74,21 @@ export default function TabsLayout() {
           ),
         }}
       />
+
+      {/* <Tabs.Screen
+        name="cart"
+        options={{
+          title: "Cart",
+          tabBarBadge: getCartCount() > 0 ? getCartCount() : undefined, // ✅ badge from context
+          tabBarIcon: ({ color, focused }) => (
+            <ShoppingCart
+              size={28}
+              color={color}
+              weight={focused ? "fill" : "regular"}
+            />
+          ),
+        }}
+      /> */}
     </Tabs>
   );
 }
