@@ -17,7 +17,7 @@ export default function RootNavigator() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       {user ? (
-        <Stack.Screen name="(tabs)/index" />
+        <Stack.Screen name="(tabs)" />
       ) : (
         <Stack.Screen name="(auth)/login" />
       )}
