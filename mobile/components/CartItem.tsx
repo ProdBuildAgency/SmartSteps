@@ -1,6 +1,6 @@
 import { CartItem } from "@/types/cart";
 import { useCart } from "@/contexts/CartContext";
-import { Minus, Plus, Trash } from "phosphor-react-native";
+import { Minus, MinusIcon, Plus, PlusIcon } from "phosphor-react-native";
 import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 
@@ -12,11 +12,11 @@ export function CartItemComponent({ item }: CartItemComponentProps) {
   const { updateQuantity, removeFromCart } = useCart();
 
   return (
-    <View className="bg-white rounded-xl p-4 flex-row shadow-sm mb-3">
-      <View className="border-2 border-blue-500 rounded-lg p-2 bg-gray-50 w-20 h-20">
-        <Image 
-          source={item.image} 
-          className="w-full h-full" 
+    <View className="bg-background-950 rounded-xl p-4 flex-row shadow-sm mb-3 border-[0.5px] border-secondary-700 shadow-secondary-700 w-[370px] h-[132px] justify-items-center items-center">
+      <View className="w-[100px] h-[100px] border-2 border-primary-500 rounded-xl p-2 bg-gray-50">
+        <Image
+          source={item.image}
+          className="w-[84px] h-[84px] items-center justify-center"
           resizeMode="contain"
         />
       </View>
@@ -24,47 +24,43 @@ export function CartItemComponent({ item }: CartItemComponentProps) {
       <View className="flex-1 ml-3">
         <View className="flex-row justify-between items-start">
           <View className="flex-1">
-            <Text className="text-gray-900 font-semibold text-base mb-1">
-              {item.title}
-            </Text>
-            <Text className="text-gray-600 text-xs" numberOfLines={1}>
+            <Text className="text-textSecondary text-[12px]" numberOfLines={2}>
               {item.description}
             </Text>
-          </View>
+            <Text className="text-gray-900 font-semibold text-[15px] ">
+              {item.title}
+            </Text>
 
-          <TouchableOpacity 
-            onPress={() => removeFromCart(item.id)}
-            className="p-2"
-          >
-            <Trash size={20} color="#ef4444" weight="bold" />
-          </TouchableOpacity>
-        </View>
-
-        <View className="flex-row justify-between items-center mt-3">
-          <Text className="text-gray-900 font-bold text-lg">
+             <View className="flex-row justify-between items-center ">
+          <Text className="text-gray-900 font-bold text-[15px]">
             ₹ {item.price * item.quantity}
           </Text>
 
-          <View className="flex-row items-center gap-2 bg-gray-100 rounded-lg px-2 py-1">
-            <TouchableOpacity 
+          <View className="w-[60px] h-[24px] flex-row items-center bg-gray-100 rounded-lg border-[1px] justify-between">
+            <TouchableOpacity
               onPress={() => updateQuantity(item.id, item.quantity - 1)}
               className="p-2"
             >
-              <Minus size={16} color="#374151" weight="bold" />
+              <MinusIcon size={9} color="#FFD83D" />
             </TouchableOpacity>
 
-            <Text className="text-gray-900 font-semibold text-base min-w-[30px] text-center">
+            <Text className="text-gray-900 font-poppins text-[12px] text-center">
               {item.quantity}
             </Text>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => updateQuantity(item.id, item.quantity + 1)}
               className="p-2"
             >
-              <Plus size={16} color="#374151" weight="bold" />
+              <PlusIcon size={9} color="#FFD83D" />
             </TouchableOpacity>
           </View>
         </View>
+
+          </View>
+        </View>
+
+       
       </View>
     </View>
   );

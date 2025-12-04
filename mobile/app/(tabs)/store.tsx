@@ -1,45 +1,52 @@
 import { AppBar } from "@/components/ui/appbars/AppBar";
 import { useCart } from "@/contexts/CartContext";
+import { useProducts } from "@/contexts/ProductContext";
 import { useRouter } from "expo-router";
-import { MagnifyingGlassIcon, ShoppingCartIcon } from "phosphor-react-native";
+import {
+  MagnifyingGlassIcon,
+  ShoppingCartIcon,
+} from "phosphor-react-native";
 import React, { useState } from "react";
-import { TouchableOpacity, View, Text, TextInput, ScrollView } from "react-native";
-
-// Mock data
-const productsByCategory = {
-  all: [
-
-  ],
-  curriculum: [
-
-  ],
-  worksheets: [
-
-  ],
-  assessment: [
-
-  ],
-  presentation: [
-
-  ],
-};
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
+import { ProductCard } from "@/components/ui/cards/ProductCard";
 
 const tabs = [
-  { id: 'all', label: 'All' },
-  { id: 'curriculum', label: 'Curriculum' },
-  { id: 'worksheets', label: 'Worksheets' },
-  { id: 'assessment', label: 'Assessment' },
-  { id: 'preschoolers', label: 'Preschoolers' },
-  { id: 'nursery', label: 'Nusrsery' },
+  { id: "all", label: "All" },
+  { id: "curriculum", label: "Curriculum" },
+  { id: "worksheets", label: "Worksheets" },
+  { id: "assessment", label: "Assessment" },
+  { id: "preschoolers", label: "Preschoolers" },
+  { id: "nursery", label: "Nursery" },
+  { id: "Book", label: "Book" },
 ];
 
 export default function StorePage() {
   const router = useRouter();
   const { getCartCount } = useCart();
+
+  const { products, loading, error } = useProducts();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
-  const currentProducts: any[] = [];
+  // 🔍 Filtering Logic
+  const filteredProducts = products.filter((item) => {
+    const matchesSearch =
+      item.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      activeTab === "all" ||
+      item.category?.name?.toLowerCase() === activeTab.toLowerCase();
+
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <View className="flex-1 items-center bg-background-950">
@@ -47,7 +54,6 @@ export default function StorePage() {
 
       {/* Search Bar and Cart */}
       <View className="flex-row justify-between items-center p-4 m-[16px]">
-        {/* Search Bar */}
         <View className="flex-row items-center w-[304px] h-[48px] px-4 mr-3 border-2 border-black bg-white rounded-2xl">
           <MagnifyingGlassIcon size={20} color="#6B7280" weight="bold" />
           <TextInput
@@ -56,11 +62,10 @@ export default function StorePage() {
             placeholder="Search..."
             className="flex-1 ml-2 text-[16px] text-gray-500 font-poppins"
             placeholderTextColor="#6B7280"
-            textAlignVertical="center"
           />
         </View>
 
-        {/* Cart Icon */}
+        {/* Cart */}
         <TouchableOpacity onPress={() => router.push("/cart")}>
           <View className="h-[42px] w-[42px]">
             <ShoppingCartIcon size={40} weight="fill" color="#FFD83D" />
@@ -74,7 +79,7 @@ export default function StorePage() {
       </View>
 
       {/* Tabs */}
-      <View className="w-full bg-background-950 px-2 ">
+      <View className="w-full bg-background-950 px-2">
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -84,17 +89,17 @@ export default function StorePage() {
             <TouchableOpacity
               key={tab.id}
               onPress={() => setActiveTab(tab.id)}
-              className="px-[8px] mx-1 "
+              className="px-[8px] mx-1"
               style={{
                 borderBottomWidth: 1,
-                borderBottomColor: activeTab === tab.id ? '#1e2a38' : 'transparent',
+                borderBottomColor:
+                  activeTab === tab.id ? "#1e2a38" : "transparent",
               }}
             >
               <Text
                 className="text-center text-sm w-[80px] h-[16px]"
                 style={{
-                  fontWeight: 'normal',
-                  color: '#1e2a38',
+                  color: "#1e2a38",
                 }}
               >
                 {tab.label}
@@ -106,10 +111,36 @@ export default function StorePage() {
 
       {/* Product Grid */}
       <ScrollView className="flex-1 w-full bg-background-950">
-        <View className="flex-row flex-wrap justify-between p-2">
-          {currentProducts.map((product) => (
-            <></>
-          ))}
+        <View className="flex-1 p-3">
+
+          {/* Loading State */}
+          {loading && (
+            <View className="mt-10 items-center">
+              <ActivityIndicator size="large" color="white" />
+            </View>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <Text className="text-red-500 text-center mt-6">{error}</Text>
+          )}
+
+
+          {/* Grid */}
+          <View className="flex-row flex-wrap">
+            {!loading &&
+              filteredProducts.map((product, index) => (
+                <View
+                  key={product.id}
+                  className={`w-[48%] mb-4 ${index % 2 === 0 ? "" : "ml-4"
+                    }`} // 16px gap for every second card
+                >
+                  <ProductCard product={product} />
+                </View>
+              ))}
+          </View>
+
+
         </View>
       </ScrollView>
     </View>
