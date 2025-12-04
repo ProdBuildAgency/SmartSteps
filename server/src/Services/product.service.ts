@@ -1,5 +1,6 @@
 import { prisma } from "../Configs/prisma";
 import { ProductRequest, ProductStatusRequest } from "../DTO/Requests";
+import { ProductFilterRequest } from "../DTO/Requests/productFilters.request";
 import { ProductResponse } from "../DTO/Responses";
 import { Asset, ProductStatus } from "../Enums";
 import { AppError } from "../Utilities";
@@ -67,15 +68,63 @@ export class ProductService {
         return result;
     }
 
-    static async getAll(): Promise<ProductResponse[]> {
+    static async getAll(filters: ProductFilterRequest): Promise<ProductResponse[]> {
+        const where: any = {};
+        where.status = filters.status ? Number(filters.status) : ProductStatus.ACTIVE;
+
+        if (filters.ids) {
+            where.id = {
+                in: filters.ids.split(',').map((x) => Number(x.trim()))
+            };
+        }
+
+        if (filters.category_ids) {
+            where.category_id = {
+                in: filters.category_ids.split(',').map((x) => Number(x.trim()))
+            };
+        }
+
+        if (filters.tag_ids) {
+            const tagList = filters.tag_ids.split(',').map((x) => Number(x.trim()));
+            where.product_tags = {
+                some: { tag_id: { in: tagList } }
+            };
+        }
+
+        if (filters.is_library_item !== undefined) {
+            where.is_library_item = filters.is_library_item === "true";
+        }
+        if (filters.s) {
+            const s = filters.s;
+
+            where.OR = [
+                { title: { contains: s, mode: "insensitive" } },
+                { description: { contains: s, mode: "insensitive" } },
+                {
+                    categories: {
+                        name: { contains: s, mode: "insensitive" }
+                    }
+                },
+                {
+                    product_tags: {
+                        some: {
+                            tags: {
+                                name: { contains: s, mode: "insensitive" }
+                            }
+                        }
+                    }
+                }
+            ];
+        }
         const products = await prisma.products.findMany({
+            where,
             include: {
                 categories: { select: { id: true, name: true } },
                 product_tags: { include: { tags: true } },
                 product_assets: { select: { id: true, url: true, asset_type: true } },
             },
         });
-        const response: ProductResponse[] = products.map((p) => ({
+        const response: ProductResponse[] = products.map((p: any) => ({
             id: p.id,
             title: p.title,
             description: p.description,
@@ -85,8 +134,8 @@ export class ProductService {
             status: p.status ? ProductStatus[p.status] : null,
             is_library_item: p.is_library_item,
             sku: p.sku,
-            tags: p.product_tags.map((pt) => pt.tags),
-            assets: p.product_assets.map((pa) => ({ id: pa.id, url: pa.url, asset_type: pa.asset_type ? Asset[pa.asset_type] : 'IMAGE' })),
+            tags: p.product_tags.map((pt: { tags: any; }) => pt.tags),
+            assets: p.product_assets.map((pa: any) => ({ id: pa.id, url: pa.url, asset_type: pa.asset_type ? Asset[pa.asset_type] : 'IMAGE' })),
             createdAt: p.created_at,
             updatedAt: p.updated_at,
         }));
@@ -117,8 +166,8 @@ export class ProductService {
             status: product.status ? ProductStatus[product.status] : null,
             is_library_item: product.is_library_item,
             sku: product.sku,
-            tags: product.product_tags.map((pt) => pt.tags),
-            assets: product.product_assets.map((pa) => ({ id: pa.id, url: pa.url, asset_type: pa.asset_type ? Asset[pa.asset_type] : 'IMAGE' })),
+            tags: product.product_tags.map((pt: { tags: any }) => pt.tags),
+            assets: product.product_assets.map((pa: any) => ({ id: pa.id, url: pa.url, asset_type: pa.asset_type ? Asset[pa.asset_type] : 'IMAGE' })),
             createdAt: product.created_at,
             updatedAt: product.updated_at,
         };

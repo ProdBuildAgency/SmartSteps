@@ -4,6 +4,7 @@ import { AuthenticatedRequest } from "../Middlewares";
 import { AppError } from "../Utilities";
 import { ProductService } from "../Services";
 import { ProductResponse } from "../DTO/Responses";
+import { ProductFilterRequest } from "../DTO/Requests/productFilters.request";
 
 export class ProductController {
     static async create(req: AuthenticatedRequest, res: Response) {
@@ -22,7 +23,8 @@ export class ProductController {
     }
 
     static async getAll(req: Request, res: Response) {
-        const products: ProductResponse[] = await ProductService.getAll();
+        const filters: ProductFilterRequest = req.query;
+        const products = await ProductService.getAll(filters);
         return res.status(200).json(products);
     }
 
