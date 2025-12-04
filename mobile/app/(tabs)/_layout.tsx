@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { HouseIcon, DotsNineIcon, StorefrontIcon, UserIcon, House, ShoppingCart } from "phosphor-react-native";
+import { HouseIcon, CirclesThreePlusIcon, StorefrontIcon, UserIcon, House, ShoppingCart } from "phosphor-react-native";
 import { useCart } from "@/contexts/CartContext";
 
 
@@ -52,7 +52,7 @@ export default function TabsLayout() {
         options={{
           title: "Services",
           tabBarIcon: ({ color, size }) => (
-            <DotsNineIcon size={28} color={color} weight="fill" />
+            <CirclesThreePlusIcon size={28} color={color} weight="fill" />
           ),
         }}
       />
