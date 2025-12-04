@@ -3,7 +3,10 @@ import {
     OrderRequest,
     OrderSchema,
     OrderStatusRequest,
-    OrderStatusSchema
+    OrderStatusSchema,
+    OrderItemSchema,
+    OrderItemRequest,
+    OrderFilterRequest
 } from "../DTO/Requests";
 
 import { AppError } from "../Utilities";
@@ -11,14 +14,9 @@ import { OrderService } from "../Services";
 import { AuthenticatedRequest } from "../Middlewares";
 import { OrderResponse } from "../DTO/Responses";
 import { Role } from "../Enums";
-import { OrderItemRequest, OrderItemSchema } from "../DTO/Requests/orderItem.request";
 
 export class OrderController {
 
-    /**
-     * Create Order
-     * POST /orders
-     */
     static async create(req: AuthenticatedRequest, res: Response) {
         const orderParsed = OrderSchema.safeParse(req.body);
         const itemsParsed = OrderItemSchema.safeParse(req.body.items);
@@ -31,13 +29,9 @@ export class OrderController {
             throw new AppError("Invalid order items.", 400, itemsParsed.error.issues);
         }
 
-        if (!req.user || !req.user.id) {
-            throw new AppError("Unauthorized access", 401);
-        }
-
         const orderData: OrderRequest = {
             ...orderParsed.data,
-            user_id: req.user.id
+            user_id: req.user?.id
         };
 
         const itemsData: OrderItemRequest[] = itemsParsed.data;
@@ -48,44 +42,19 @@ export class OrderController {
     }
 
 
-    /**
-     * Get all orders
-     * GET /orders?user_id=&status=
-     */
     static async getAll(req: AuthenticatedRequest, res: Response) {
-        const { user_id, status } = req.query;
-
-        // Admin can see all orders, user sees only his
-        let filter: any = {};
-
-        if (req.user?.role !== Role.ADMIN) {
-            // Force user_id to be his own ID
-            filter.user_id = req.user?.id;
-        } else {
-            // Admin side filtering allowed
-            if (user_id) filter.user_id = user_id;
-            if (status) filter.status = status;
+        const filters: OrderFilterRequest = req.query;
+        if (!filters.user_ids && req.user?.id) {
+            filters.user_ids = req.user.id;
         }
-
-        const orders: OrderResponse[] = await OrderService.getAll(filter);
+        const orders: OrderResponse[] = await OrderService.getAll(filters);
         return res.status(200).json(orders);
     }
 
-    /**
-     * Get order by ID
-     * GET /orders/:id
-     * (also returns order items)
-     */
     static async get(req: AuthenticatedRequest, res: Response) {
         const { id } = req.params;
 
         const order: OrderResponse = await OrderService.get(id);
-
-        // User cannot access others’ orders
-        if (req.user?.role !== Role.ADMIN && order.user_id !== req.user?.id) {
-            throw new AppError("Unauthorized access to this order", 403);
-        }
-
         return res.status(200).json(order);
     }
 

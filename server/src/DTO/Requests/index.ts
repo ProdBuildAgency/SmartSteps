@@ -16,3 +16,5 @@ export * from './orderStatus.request'
 export * from './order.request'
 export * from './orderItem.request'
 export * from './deliveryAddress.request'
+export * from './productFilters.request';
+export * from './orderFilters.request';
