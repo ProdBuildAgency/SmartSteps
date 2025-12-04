@@ -7,7 +7,7 @@ import router from './Routes';
 import { errorHandler } from './Middlewares';
 import { PingController } from './Utilities/ping';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const app = express();
 const prisma = new PrismaClient();

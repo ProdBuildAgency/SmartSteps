@@ -6,7 +6,7 @@ export interface OrderResponse {
   user_id: string | null;
   total_price: number;
   currency: string;
-  status: number;
+  status: string | null;
 
   payment_provider: string | null;
   payment_reference: string | null;

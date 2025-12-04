@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npx prisma generate && npx tsc",
     "start": "node dist/index.js",
-    "dev": "tsnd --respawn -r tsconfig-paths/register --pretty --transpile-only ./src/index.ts",
+    "dev": "tsnd --quiet --respawn -r tsconfig-paths/register --pretty --transpile-only ./src/index.ts",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev"
   },

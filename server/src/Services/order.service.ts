@@ -1,6 +1,7 @@
 import { prisma } from "../Configs/prisma";
 import { AppError } from "../Utilities";
 import {
+    OrderFilterRequest,
     OrderRequest,
     OrderStatusRequest
 } from "../DTO/Requests";
@@ -61,7 +62,7 @@ export class OrderService {
                 user_id: newOrder.user_id,
                 total_price: newOrder.total_price,
                 currency: newOrder.currency ?? "INR",
-                status: newOrder.status,
+                status: newOrder.status ? OrderStatus[newOrder.status] : null,
                 payment_provider: newOrder.payment_provider ?? "",
                 payment_reference: newOrder.payment_reference ?? null,
                 deliveryAddress: newOrder.deliveryAddress ?? null,
@@ -87,15 +88,30 @@ export class OrderService {
         return result;
     }
 
+    static async getAll(filters: OrderFilterRequest): Promise<OrderResponse[]> {
+        const where: any = {};
+        if (filters.user_ids) {
+            const userList = filters.user_ids
+                .split(',')
+                .map(x => x.trim())
+                .filter(x => x.length > 0);
 
+            if (userList.length > 0) {
+                where.user_id = { in: userList };
+            }
+        }
 
+        if (filters.ids) {
+            where.id = {
+                in: filters.ids.split(',').map(x => Number(x.trim()))
+            };
+        }
 
-    /**
-     * Get all orders (with optional filters)
-     */
-    static async getAll(filter: any = {}): Promise<OrderResponse[]> {
+        if (filters.status) {
+            where.status = Number(filters.status);
+        }
         const orders = await prisma.orders.findMany({
-            where: filter,
+            where,
             orderBy: { created_at: "desc" }
         });
 
@@ -146,7 +162,7 @@ export class OrderService {
             user_id: order.user_id,
             total_price: order.total_price,
             currency: order.currency ?? "INR",
-            status: order.status,
+            status: order.status ? OrderStatus[order.status] : null,
             payment_provider: order.payment_provider,
             payment_reference: order.payment_reference,
             deliveryAddress: order.deliveryAddressId ?? null,

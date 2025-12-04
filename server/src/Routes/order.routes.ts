@@ -4,7 +4,7 @@ import { AuthMiddleWare } from "../Middlewares";
 
 const router = express.Router();
 
-router.post("", AuthMiddleWare.verifyToken,OrderController.create);
+router.post("", AuthMiddleWare.verifyToken, OrderController.create);
 
 router.get("", AuthMiddleWare.verifyToken, OrderController.getAll);
 
