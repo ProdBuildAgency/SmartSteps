@@ -1,5 +1,5 @@
 // app/(tabs)/explore.tsx
-import { AppBar } from "@/components/ui/AppBar";
+import { AppBar } from "@/components/ui/appbars/AppBar";
 import React from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { ChalkboardTeacherIcon, TrendUpIcon, SecurityCameraIcon, CalendarCheckIcon, BooksIcon, HeadsetIcon, } from "phosphor-react-native";
