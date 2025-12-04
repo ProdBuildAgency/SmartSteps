@@ -2,7 +2,7 @@
 import React from "react";
 import { useSession } from "@/contexts/SessionContext";
 import { View, Text, Image } from "react-native";
-import { AppBar } from "@/components/ui/AppBar";
+import { AppBar } from "@/components/ui/appbars/AppBar";
 
 export default function Home() {
   const { user } = useSession();

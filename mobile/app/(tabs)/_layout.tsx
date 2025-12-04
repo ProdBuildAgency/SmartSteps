@@ -1,14 +1,29 @@
 import React from "react";
+import { View, Text } from "react-native";
 import { Tabs } from "expo-router";
-import { HouseIcon, DotsNineIcon, StorefrontIcon, UserIcon, House, ShoppingCart } from "phosphor-react-native";
-import { useCart } from "@/contexts/CartContext";
-
-
-
-
+import { StyleSheet, ViewStyle } from "react-native";
+import {
+  HouseIcon,
+  CirclesThreePlusIcon,
+  StorefrontIcon,
+  UserIcon,
+} from "phosphor-react-native";
 
 export default function TabsLayout() {
-  const { getCartCount } = useCart();
+
+  const styles = StyleSheet.create({
+    icon: {
+      width: 48,
+      height: 48,
+      borderBottomLeftRadius: 20,
+      borderBottomRightRadius: 20,
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
+      justifyContent: "center",
+      alignItems: "center",
+    } as ViewStyle,
+  });
+
   return (
     <Tabs
       screenOptions={{
@@ -22,10 +37,7 @@ export default function TabsLayout() {
           height: 60,
           paddingBottom: 5,
           paddingTop: 5,
-
-          elevation: 20, // Android shadow
-
-          // iOS shadow
+          elevation: 20,
           shadowColor: "#000",
           shadowOffset: { width: 0, height: -4 },
           shadowOpacity: 0.9,
@@ -37,58 +49,58 @@ export default function TabsLayout() {
         },
       }}
     >
-
       <Tabs.Screen
         name="home"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <HouseIcon size={28} color={color} weight="fill" />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="services"
-        options={{
-          title: "Services",
-          tabBarIcon: ({ color, size }) => (
-            <DotsNineIcon size={28} color={color} weight="fill" />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="store"
-        options={{
-          title: "Store",
-          tabBarIcon: ({ color, size }) => (
-            <StorefrontIcon size={28} color={color} weight="fill" />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <UserIcon size={28} color={color} weight="fill" />
+          tabBarLabel: ({ focused }) => (focused ? null : <Text className = "text-secondary-500 font-bold">Home</Text>),
+
+          tabBarIcon: ({ color, focused }) => (
+            <View style={[styles.icon, { backgroundColor: focused ? "rgba(95,108,123,0.1)" : "transparent" }]}>
+              <HouseIcon size={28} color={color} weight="fill" />
+            </View>
           ),
         }}
       />
 
-      {/* <Tabs.Screen
-        name="cart"
+      <Tabs.Screen
+        name="services"
         options={{
-          title: "Cart",
-          tabBarBadge: getCartCount() > 0 ? getCartCount() : undefined, // ✅ badge from context
+          title: "Services",
+          tabBarLabel: ({ focused }) => (focused ? null : <Text className = "text-secondary-500 font-bold">Services</Text>),
           tabBarIcon: ({ color, focused }) => (
-            <ShoppingCart
-              size={28}
-              color={color}
-              weight={focused ? "fill" : "regular"}
-            />
+            <View style={[styles.icon, { backgroundColor: focused ? "rgba(95,108,123,0.1)" : "transparent" }]}>
+              <CirclesThreePlusIcon size={28} color={color} weight="fill" />
+            </View>
           ),
         }}
-      /> */}
+      />
+
+      <Tabs.Screen
+        name="store"
+        options={{
+          title: "Store",
+          tabBarLabel: ({ focused }) => (focused ? null : <Text className = "text-secondary-500 font-bold">Store</Text>),
+          tabBarIcon: ({ color, focused }) => (
+            <View style={[styles.icon, { backgroundColor: focused ? "rgba(95,108,123,0.1)" : "transparent" }]}>
+              <StorefrontIcon size={28} color={color} weight="fill" />
+            </View>
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarLabel: ({ focused }) => (focused ? null : <Text className = "text-secondary-500 font-bold">Profile</Text>),
+          tabBarIcon: ({ color, focused }) => (
+            <View style={[styles.icon, { backgroundColor: focused ? "rgba(95,108,123,0.1)" : "transparent" }]}>
+              <UserIcon size={28} color={color} weight="fill" />
+            </View>
+          ),
+        }}
+      />
     </Tabs>
   );
 }

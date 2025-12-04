@@ -1,4 +1,4 @@
-import { AppBar } from "@/components/ui/AppBar";
+import { AppBar } from "@/components/ui/appbars/AppBar";
 import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "expo-router";
 import { MagnifyingGlassIcon, ShoppingCartIcon } from "phosphor-react-native";
