@@ -3,6 +3,7 @@ import { AppBar } from "@/components/ui/appbars/AppBar";
 import React from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { ChalkboardTeacherIcon, TrendUpIcon, SecurityCameraIcon, CalendarCheckIcon, BooksIcon, HeadsetIcon, } from "phosphor-react-native";
+import { router } from "expo-router";
 
 export default function Explore() {
 
@@ -42,6 +43,7 @@ export default function Explore() {
                 : col === 0 ? orange : blue;
             return (
               <TouchableOpacity
+                 onPress={() => router.push(`/service?title=${encodeURIComponent(item.title)}`)}
                 className="flex-1 w-[177px] h-[200px] flex-col bg-white rounded-2xl p-6 shadow-md shadow-black/10 items-center"
                 style={{
                   borderWidth: 2,

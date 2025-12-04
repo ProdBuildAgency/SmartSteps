@@ -6,7 +6,6 @@ import { View, ActivityIndicator } from "react-native";
 export default function RootNavigator() {
   const { user, isLoadingSession } = useSession();
 
-  // While checking SecureStore → show loader
   if (isLoadingSession) {
     return (
       <View className="flex-1 justify-center items-center">
@@ -16,10 +15,12 @@ export default function RootNavigator() {
   }
 
   return (
-    <Stack
-      screenOptions={{ headerShown: false }}
-      initialRouteName={user ? "(tabs)" : "(auth)"}
-
-    />
+    <Stack screenOptions={{ headerShown: false }}>
+      {user ? (
+        <Stack.Screen name="(tabs)/index" />
+      ) : (
+        <Stack.Screen name="(auth)/login" />
+      )}
+    </Stack>
   );
 }
