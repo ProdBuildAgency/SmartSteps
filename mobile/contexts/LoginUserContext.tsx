@@ -39,15 +39,11 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
     }
 
     try {
-      // console.log("Submitting login form:", formData);
-
       const response = await axios.post(
         `${backendUrl}/api/v1/auth/login`,
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
-
-      // console.log("✅ Login successful:", response.data);
 
       resetForm();
 

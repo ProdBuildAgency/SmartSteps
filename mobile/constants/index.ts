@@ -1,1 +1,2 @@
-// assets imports
+export * from './serviceCard'
+export * from './serviceCardData'

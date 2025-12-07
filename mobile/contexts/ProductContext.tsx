@@ -30,7 +30,6 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProducts = async () => {
     if (!token) {
-      console.log("⛔ No token — skipping product fetch");
       return;
     }
 
@@ -45,8 +44,6 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       });
 
       const data = await res.json();
-      console.log("📦 PRODUCT API RESPONSE:", data);
-
       if (!Array.isArray(data)) {
         setProducts([]);
         throw new Error("Invalid product response");
@@ -54,7 +51,6 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
       setProducts(data);
     } catch (err: any) {
-      console.log("❌ PRODUCT FETCH ERROR:", err.message);
       setError(err.message || "Failed to fetch products");
     } finally {
       setLoading(false);
@@ -68,16 +64,13 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
   // ⭐ Wait until session is restored AND token exists
   useEffect(() => {
     if (isLoadingSession) {
-      console.log("Waiting for session to restore...");
       return;
     }
 
     if (!token) {
-      console.log("No token found after session restored");
       return;
     }
 
-    console.log("fetching products");
     fetchProducts();
   }, [token, isLoadingSession]);
 
