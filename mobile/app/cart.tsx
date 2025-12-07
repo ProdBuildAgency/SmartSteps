@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { useCart } from "@/contexts/CartContext";
-import { CartItemComponent } from "@/components/CartItem";
+import { CartItemComponent } from "@/components/ui/cards/CartItem";
 import { BackAppBar } from "@/components/ui/appbars/BackAppBar";
 
 

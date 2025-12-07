@@ -16,6 +16,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { ProductCard } from "@/components/ui/cards/ProductCard";
+import ProductCardHorizontal from "@/components/ui/cards/ProductCardHorizontal";
 
 const tabs = [
   { id: "all", label: "All" },
@@ -126,21 +127,32 @@ export default function StorePage() {
           )}
 
 
+
           {/* Grid */}
           <View className="flex-row flex-wrap">
             {!loading &&
-              filteredProducts.map((product, index) => (
-                <View
-                  key={product.id}
-                  className={`w-[48%] mb-4 ${index % 2 === 0 ? "" : "ml-4"
-                    }`} // 16px gap for every second card
-                >
-                  <ProductCard product={product} />
-                </View>
-              ))}
+              filteredProducts.map((product, index) => {
+
+                const isAllTab = activeTab === "all";
+
+                return (
+                  <View
+                    key={product.id}
+                    className={
+                      isAllTab
+                        ? `w-[48%] mb-4 ${index % 2 !== 0 ? "ml-4" : ""}` // 2 items per row
+                        : `w-full mb-4` // 1 item per row
+                    }
+                  >
+                    {isAllTab ? (
+                      <ProductCard product={product} /> 
+                    ) : (
+                      <ProductCardHorizontal product={product} /> 
+                    )}
+                  </View>
+                );
+              })}
           </View>
-
-
         </View>
       </ScrollView>
     </View>
