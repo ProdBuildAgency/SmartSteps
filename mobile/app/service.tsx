@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import { PhoneCallIcon, WhatsappLogoIcon } from 'phosphor-react-native';
 import AppAlert from '@/components/ui/AppAlert';
-import serviceCardData from '@/constants/serviceCardData';
+import { serviceCardData } from '@/constants';
 
 const Service = () => {
     const { title } = useLocalSearchParams<{ title: string }>();
