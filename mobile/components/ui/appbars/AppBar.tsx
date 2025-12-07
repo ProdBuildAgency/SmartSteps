@@ -10,15 +10,15 @@ export function AppBar({ title }: { title: string }) {
         className="w-[48px] h-[48px]"
         resizeMode="contain"
       />
-      
+
 
       <View className="flex-1 items-center">
         <Text className="text-secondary-500 text-[24px] font-Poppins_600SemiBold font-semibold ">
           {title}
         </Text>
       </View>
-      
-      
+
+
       <View className="w-10" />
     </View>
   );

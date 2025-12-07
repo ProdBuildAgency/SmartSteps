@@ -54,13 +54,13 @@ export default function StorePage() {
 
       {/* Search Bar and Cart */}
       <View className="flex-row justify-between items-center p-4 m-[16px]">
-        <View className="flex-row items-center w-[304px] h-[48px] px-4 mr-3 border-2 border-black bg-white rounded-2xl">
-          <MagnifyingGlassIcon size={20} color="#6B7280" weight="bold" />
+        <View className="flex-row items-center justify-center w-[304px] h-[48px] px-4 mr-3 border-2 border-black bg-white rounded-2xl">
+          <MagnifyingGlassIcon size={20} color="#5F6C7B" weight="bold" />
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholder="Search..."
-            className="flex-1 ml-2 text-[16px] text-gray-500 font-poppins"
+            placeholder={`Search for "Curriculum"`}
+            className="flex-1 ml-2 text-[16px] text-textSecondary font-poppins"
             placeholderTextColor="#6B7280"
           />
         </View>

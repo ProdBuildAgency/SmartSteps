@@ -53,11 +53,11 @@ export default function TabsLayout() {
         name="home"
         options={{
           title: "Home",
-          tabBarLabel: ({ focused }) => (focused ? null : <Text className = "text-secondary-500 font-bold">Home</Text>),
+          tabBarLabel: ({ focused }) => (focused ? null : <Text className="text-secondary-500 font-bold">Home</Text>),
 
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.icon, { backgroundColor: focused ? "rgba(95,108,123,0.1)" : "transparent" }]}>
-              <HouseIcon size={28} color={color} weight="fill" />
+              <HouseIcon size={focused ? 36 : 28} color={color} weight="fill" />
             </View>
           ),
         }}
@@ -67,10 +67,10 @@ export default function TabsLayout() {
         name="services"
         options={{
           title: "Services",
-          tabBarLabel: ({ focused }) => (focused ? null : <Text className = "text-secondary-500 font-bold">Services</Text>),
+          tabBarLabel: ({ focused }) => (focused ? null : <Text className="text-secondary-500 font-bold">Services</Text>),
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.icon, { backgroundColor: focused ? "rgba(95,108,123,0.1)" : "transparent" }]}>
-              <CirclesThreePlusIcon size={28} color={color} weight="fill" />
+              <CirclesThreePlusIcon size={focused ? 36 : 28} color={color} weight="fill" />
             </View>
           ),
         }}
@@ -80,10 +80,10 @@ export default function TabsLayout() {
         name="store"
         options={{
           title: "Store",
-          tabBarLabel: ({ focused }) => (focused ? null : <Text className = "text-secondary-500 font-bold">Store</Text>),
+          tabBarLabel: ({ focused }) => (focused ? null : <Text className="text-secondary-500 font-bold">Store</Text>),
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.icon, { backgroundColor: focused ? "rgba(95,108,123,0.1)" : "transparent" }]}>
-              <StorefrontIcon size={28} color={color} weight="fill" />
+              <StorefrontIcon size={focused ? 36 : 28} color={color} weight="fill" />
             </View>
           ),
         }}
@@ -93,10 +93,10 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarLabel: ({ focused }) => (focused ? null : <Text className = "text-secondary-500 font-bold">Profile</Text>),
+          tabBarLabel: ({ focused }) => (focused ? null : <Text className="text-secondary-500 font-bold">Profile</Text>),
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.icon, { backgroundColor: focused ? "rgba(95,108,123,0.1)" : "transparent" }]}>
-              <UserIcon size={28} color={color} weight="fill" />
+              <UserIcon size={focused ? 36 : 28} color={color} weight="fill" />
             </View>
           ),
         }}
