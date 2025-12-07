@@ -68,21 +68,20 @@ model order_items {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model orders {
-  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id           String?       @db.Uuid
+  id                String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id           String?          @db.Uuid
   total_price       Int
-  currency          String?       @default("INR") @db.VarChar(3)
-  status            Int           @db.SmallInt
+  currency          String?          @default("INR") @db.VarChar(3)
+  status            Int              @db.SmallInt
   payment_provider  String?
   payment_reference String?
   delivery_estimate Json?
-  created_at        DateTime?     @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime?     @default(now()) @db.Timestamptz(6)
+  created_at        DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime?        @default(now()) @db.Timestamptz(6)
+  deliveryAddressId String?          @db.Uuid
   order_items       order_items[]
-  users             users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  deliveryAddressId String? @db.Uuid
-
   deliveryAddress   DeliveryAddress? @relation(fields: [deliveryAddressId], references: [id])
+  users             users?           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -119,6 +118,7 @@ model products {
   sku             String?
   created_at      DateTime?        @default(now()) @db.Timestamptz(6)
   updated_at      DateTime?        @default(now()) @db.Timestamptz(6)
+  alternate_price Decimal?         @db.Decimal(18, 2)
   order_items     order_items[]
   product_assets  product_assets[]
   product_tags    product_tags[]
@@ -136,41 +136,38 @@ model tags {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model users {
-  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  role          Int          @db.SmallInt
+  id            String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role          Int               @db.SmallInt
   name          String?
-  email         String?      @unique
-  phone         String?      @unique
+  email         String?           @unique
+  phone         String?           @unique
   password_hash String?
-  created_at    DateTime?    @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime?    @default(now()) @db.Timestamptz(6)
+  created_at    DateTime?         @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime?         @default(now()) @db.Timestamptz(6)
+  addresses     DeliveryAddress[]
   businesses    businesses[]
   children      children[]
   orders        orders[]
-
-  addresses DeliveryAddress[]
 }
 
 model DeliveryAddress {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId      String   @db.Uuid
-  fullName    String
-  phone       String
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @db.Uuid
+  fullName     String
+  phone        String
   addressLine1 String
   addressLine2 String?
-  city        String
-  state       String
-  pincode     String
-  country     String   @default("India")
-  landmark    String?
-  isDefault   Boolean  @default(false)
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  deletedAt   DateTime?
-
-  user        users     @relation(fields: [userId], references: [id])
+  city         String
+  state        String
+  pincode      String
+  country      String    @default("India")
+  landmark     String?
+  isDefault    Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  user         users     @relation(fields: [userId], references: [id])
+  orders       orders[]
 
   @@index([userId])
-  orders orders[]
 }
