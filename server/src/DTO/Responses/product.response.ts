@@ -1,10 +1,12 @@
-import { Decimal } from "@prisma/client/runtime/library";
+ import { Prisma } from "@prisma/client";
+export type Decimal = Prisma.Decimal;
 
 export interface ProductResponse {
     id: string;
     title: string;
     description?: string | null;
     price: number | Decimal;
+    alternate_price: number | Decimal | null;
     currency: string | null,
     category: {
         id: string;

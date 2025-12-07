@@ -7,6 +7,7 @@ export const productSchema = z.object({
   description: z.string().min(3, "Description is required"),
   category_id: z.string().optional(),
   price: z.number().min(2, "Price is required"),
+  alternate_price: z.number().optional(),
   sku: z.string().optional(),
   currency: z.string().default("INR"),
   is_library_item: z.boolean().default(true),
