@@ -20,7 +20,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === product.id);
-      
+
       if (existingItem) {
         // Increase quantity if already in cart
         return prevCart.map((item) =>
@@ -61,8 +61,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const getCartCount = () => {
-    return cart.reduce((count, item) => count + item.quantity, 0);
+    return cart.length;
   };
+
 
   const isInCart = (productId: string) => {
     return cart.some((item) => item.id === productId);

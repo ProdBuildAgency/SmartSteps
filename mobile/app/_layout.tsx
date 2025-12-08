@@ -8,6 +8,7 @@ import RootNavigator from "@/components/RootNavigator";
 import { LoginProvider } from "@/contexts/LoginUserContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { ProductProvider } from "@/contexts/ProductContext";
+import { CategoriesProvider } from "@/contexts/CategoriesContext";
 
 ExpoSplashScreen.preventAutoHideAsync();
 
@@ -22,7 +23,9 @@ function AppContent() {
   return (
     <LoginProvider>
       <RegisterUserProvider>
-        <RootNavigator />
+        <CategoriesProvider>
+          <RootNavigator />
+        </CategoriesProvider>
       </RegisterUserProvider>
     </LoginProvider>
   );

@@ -30,7 +30,8 @@ const ProductCardHorizontal = ({ product }: { product: Product }) => {
 
     return (
         <View className="bg-background-950 rounded-xl p-4 flex-row shadow-sm mb-3 border-[0.5px] border-secondary-700 shadow-secondary-700 w-[370px] h-[160px] justify-items-center items-center">
-            <View className="w-[100px] h-[128px] border-2 border-primary-500 items-center justify-items-center rounded-xl p-2 bg-gray-50">
+            <View className="w-[100px] h-[128px] border-2 border-primary-500 
+                items-center justify-center rounded-xl p-2 bg-gray-50">
                 <Image
                     source={imageSource}
                     className="w-[84px] h-[84px] items-center justify-center"

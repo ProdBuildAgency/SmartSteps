@@ -17,37 +17,41 @@ import {
 } from "react-native";
 import { ProductCard } from "@/components/ui/cards/ProductCard";
 import ProductCardHorizontal from "@/components/ui/cards/ProductCardHorizontal";
-
-const tabs = [
-  { id: "all", label: "All" },
-  { id: "curriculum", label: "Curriculum" },
-  { id: "worksheets", label: "Worksheets" },
-  { id: "assessment", label: "Assessment" },
-  { id: "preschoolers", label: "Preschoolers" },
-  { id: "nursery", label: "Nursery" },
-  { id: "Book", label: "Book" },
-];
+import { useCategories } from "@/contexts/CategoriesContext";
 
 export default function StorePage() {
   const router = useRouter();
   const { getCartCount } = useCart();
 
   const { products, loading, error } = useProducts();
+  const { categories } = useCategories();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
-  // 🔍 Filtering Logic
-  const filteredProducts = products.filter((item) => {
-    const matchesSearch =
-      item.title.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCategory =
-      activeTab === "all" ||
-      item.category?.name?.toLowerCase() === activeTab.toLowerCase();
+const filteredProducts = products.filter((item) => {
+  const q = searchQuery.toLowerCase();
 
-    return matchesSearch && matchesCategory;
-  });
+  const matchesTitle = item.title?.toLowerCase()?.includes(q);
+
+  const matchesCategoryName =
+    item.category?.name?.toLowerCase()?.includes(q);
+
+  const matchesTags = item.tags?.some((tag: any) =>
+    tag.name?.toLowerCase()?.includes(q)
+  );
+
+  const matchesSearch =
+    matchesTitle || matchesCategoryName || matchesTags;
+
+  const matchesCategory =
+    activeTab === "all" ||
+    item.category?.name?.toLowerCase() === activeTab.toLowerCase();
+
+  return matchesSearch && matchesCategory;
+});
+
 
   return (
     <View className="flex-1 items-center bg-background-950">
@@ -66,7 +70,7 @@ export default function StorePage() {
           />
         </View>
 
-        {/* Cart */}
+        {/* Cart Icon */}
         <TouchableOpacity onPress={() => router.push("/cart")}>
           <View className="h-[42px] w-[42px]">
             <ShoppingCartIcon size={40} weight="fill" color="#FFD83D" />
@@ -86,53 +90,66 @@ export default function StorePage() {
           showsHorizontalScrollIndicator={false}
           className="flex-row mx-[16px]"
         >
-          {tabs.map((tab) => (
-            <TouchableOpacity
-              key={tab.id}
-              onPress={() => setActiveTab(tab.id)}
-              className="px-[8px] mx-1"
-              style={{
-                borderBottomWidth: 1,
-                borderBottomColor:
-                  activeTab === tab.id ? "#1e2a38" : "transparent",
-              }}
-            >
-              <Text
-                className="text-center text-sm w-[80px] h-[16px]"
+          {/* All Tab */}
+          <TouchableOpacity
+            onPress={() => setActiveTab("all")}
+            className="px-[8px] mx-1"
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor:
+                activeTab === "all" ? "#1e2a38" : "transparent",
+            }}
+          >
+            <Text className="text-center text-sm w-[80px] h-[16px]">
+              All
+            </Text>
+          </TouchableOpacity>
+
+          {/* Category Tabs */}
+          {categories
+            .filter((cat) => cat.name?.toLowerCase() !== "all")
+            .map((cat) => (
+
+              <TouchableOpacity
+                key={cat.id}
+                onPress={() => setActiveTab(cat.name.toLowerCase())}
+                className="px-[8px] mx-1"
                 style={{
-                  color: "#1e2a38",
+                  borderBottomWidth: 1,
+                  borderBottomColor:
+                    activeTab === cat.name.toLowerCase() ? "#1e2a38" : "transparent",
                 }}
               >
-                {tab.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  className="text-center text-sm w-[80px] h-[16px]"
+                  style={{ color: "#1e2a38" }}
+                >
+                  {cat.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
         </ScrollView>
       </View>
 
       {/* Product Grid */}
       <ScrollView className="flex-1 w-full bg-background-950">
         <View className="flex-1 p-3">
-
-          {/* Loading State */}
+          {/* Loading */}
           {loading && (
             <View className="mt-10 items-center">
               <ActivityIndicator size="large" color="white" />
             </View>
           )}
 
-          {/* Error State */}
+          {/* Error */}
           {error && (
             <Text className="text-red-500 text-center mt-6">{error}</Text>
           )}
 
-
-
-          {/* Grid */}
+          {/* Product List */}
           <View className="flex-row flex-wrap">
             {!loading &&
               filteredProducts.map((product, index) => {
-
                 const isAllTab = activeTab === "all";
 
                 return (
@@ -140,14 +157,14 @@ export default function StorePage() {
                     key={product.id}
                     className={
                       isAllTab
-                        ? `w-[48%] mb-4 ${index % 2 !== 0 ? "ml-4" : ""}` // 2 items per row
-                        : `w-full mb-4` // 1 item per row
+                        ? `w-[48%] mb-4 ${index % 2 !== 0 ? "ml-4" : ""}`
+                        : `w-full mb-4`
                     }
                   >
                     {isAllTab ? (
-                      <ProductCard product={product} /> 
+                      <ProductCard product={product} />
                     ) : (
-                      <ProductCardHorizontal product={product} /> 
+                      <ProductCardHorizontal product={product} />
                     )}
                   </View>
                 );
