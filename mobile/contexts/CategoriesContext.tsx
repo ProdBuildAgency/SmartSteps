@@ -32,7 +32,7 @@ export const CategoriesProvider = ({ children }: { children: React.ReactNode }) 
       const res = await fetch(`${BACKEND_URL}/api/v1/category`);
       const data = await res.json();
 
-      // 🔥 Your API returns an array, so just use it directly
+
       const categoryArray = Array.isArray(data) ? data : [];
 
       setCategories([
