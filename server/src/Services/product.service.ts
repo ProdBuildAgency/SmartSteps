@@ -72,7 +72,7 @@ export class ProductService {
 
     static async getAll(filters: ProductFilterRequest): Promise<ProductResponse[]> {
         const where: any = {};
-        where.status = filters.status ? Number(filters.status) : ;
+        
          if (filters.status) {
             where.status = Number(filters.status);
         }
