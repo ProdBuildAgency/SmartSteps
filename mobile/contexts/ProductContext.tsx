@@ -12,7 +12,7 @@ interface FetchParams {
   ids?: string[];
   categoryIds?: string[];
   tagIds?: string[];
-  s?: string; // search
+  s?: string;
   status?: string;
 }
 
@@ -23,6 +23,7 @@ interface ProductContextType {
 
   fetchProducts: (params?: FetchParams) => Promise<void>;
   getProductById: (id: string) => Product | undefined;
+  fetchProductById: (id: string) => Promise<Product | null>;
 }
 
 const ProductContext = createContext<ProductContextType | null>(null);
@@ -51,6 +52,9 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
     return `?${query.toString()}`;
   };
+
+
+  // Fetch all products
 
   const fetchProducts = async (params?: FetchParams) => {
     if (!token) return;
@@ -81,16 +85,38 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+
+  // Fetch single product by ID
+
+  const fetchProductById = async (id: string): Promise<Product | null> => {
+    if (!token) return null;
+
+    try {
+      const url = `${backendUrl}/api/v1/products/${id}`;
+
+      const res = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) return null;
+
+      const data = await res.json();
+      return data;
+    } catch {
+      return null;
+    }
+  };
+
   const getProductById = (id: string) => {
     return products.find((p) => p.id === id);
   };
 
-  // Fetch all products on first load
+  // Fetch all products once session is ready
   useEffect(() => {
     if (isLoadingSession) return;
     if (!token) return;
 
-    fetchProducts(); // 📌 no params = fetch all
+    fetchProducts();
   }, [token, isLoadingSession]);
 
   return (
@@ -101,6 +127,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
         error,
         fetchProducts,
         getProductById,
+        fetchProductById,
       }}
     >
       {children}
