@@ -72,8 +72,11 @@ export class ProductService {
 
     static async getAll(filters: ProductFilterRequest): Promise<ProductResponse[]> {
         const where: any = {};
-        where.status = filters.status ? Number(filters.status) : ProductStatus.ACTIVE;
-
+        where.status = filters.status ? Number(filters.status) : ;
+         if (filters.status) {
+            where.status = Number(filters.status);
+        }
+        
         if (filters.ids) {
             where.id = {
                 in: filters.ids.split(',').map((x) => Number(x.trim()))
