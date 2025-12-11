@@ -14,7 +14,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useProducts } from "@/contexts/ProductContext";
 import { ProductCard } from "@/components/ui/cards/ProductCard"; // import your card
 import QuantitySelector from "@/components/ui/QuantitySelector";
-import { MinusIcon, PlusIcon, ShoppingCartSimpleIcon } from "phosphor-react-native";
+import { CaretLeftIcon, MagnifyingGlassIcon, MinusIcon, PlusIcon, ShoppingCartSimpleIcon } from "phosphor-react-native";
 
 export default function ProductPage() {
   const { id } = useLocalSearchParams();
@@ -82,10 +82,30 @@ export default function ProductPage() {
             source={{
               uri: product.assets?.[0]?.url ?? "https://via.placeholder.com/300",
             }}
-            className="w-full h-full"
+            className="w-[350px] h-[400px] bg-slate-400"
             resizeMode="cover"
           />
         </View>
+
+        <View className="absolute flex-row justify-between top-[44px] w-full px-4">
+
+          {/* BACK BUTTON */}
+          <TouchableOpacity
+            className="w-12 h-12 rounded-full bg-background-950 items-center justify-center"
+            onPress={() => router.back()}
+          >
+            <CaretLeftIcon color="#FFD83D" />
+          </TouchableOpacity>
+
+          {/* SEARCH BUTTON */}
+          <TouchableOpacity
+            className="w-12 h-12 rounded-full bg-background-950 items-center justify-center"
+            onPress={() => router.push("/search")}
+          >
+            <MagnifyingGlassIcon color="#FFD83D" />
+          </TouchableOpacity>
+        </View>
+
 
         {/* Info Section */}
         <View className="bg-background-950 p-4 m-[16px] rounded-lg border-[0.1px] border-black">
