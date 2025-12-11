@@ -1,7 +1,7 @@
 import { useCart } from '@/contexts/CartContext';
 import { Product } from '@/types/product';
 import { useRouter } from 'expo-router';
-import { ShoppingCartSimpleIcon } from 'phosphor-react-native';
+import { ShoppingCartSimpleIcon, StarHalfIcon, StarIcon } from 'phosphor-react-native';
 import React from 'react';
 import { TouchableOpacity, View, Text, Image } from 'react-native';
 
@@ -55,7 +55,14 @@ const ProductCardHorizontal = ({ product }: { product: Product }) => {
           <Text className="text-gray-900 font-semibold text-[15px]">
             {product.title}
           </Text>
-
+          <View className="flex-row items-center mt-2">
+            <StarIcon size={14} weight="fill" color="#FFD83D" />
+            <StarIcon size={14} weight="fill" color="#FFD83D" />
+            <StarIcon size={14} weight="fill" color="#FFD83D" />
+            <StarHalfIcon size={14} weight="fill" color="#FFD83D" />
+            <StarIcon size={14} weight="regular" color="#FFD83D" />
+            <Text className="font-poppins text-[14px]">3.5</Text>
+          </View>
           <Text className="text-gray-900 font-bold text-[15px]">
             ₹ {product.price}
           </Text>
