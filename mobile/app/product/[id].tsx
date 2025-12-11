@@ -14,7 +14,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useProducts } from "@/contexts/ProductContext";
 import { ProductCard } from "@/components/ui/cards/ProductCard"; // import your card
 import QuantitySelector from "@/components/ui/QuantitySelector";
-import { CaretLeftIcon, MagnifyingGlassIcon, MinusIcon, PlusIcon, ShoppingCartSimpleIcon } from "phosphor-react-native";
+import { CaretLeftIcon, MagnifyingGlassIcon, MinusIcon, PlusIcon, ShoppingCartSimpleIcon, StarHalfIcon, StarIcon } from "phosphor-react-native";
 
 export default function ProductPage() {
   const { id } = useLocalSearchParams();
@@ -112,12 +112,19 @@ export default function ProductPage() {
           <Text className="text-base text-primary-50 leading-6">
             {product.description}
           </Text>
-
+          <View className="flex-row items-center mt-2">
+            <StarIcon size={14} weight="fill" color="#FFD83D" />
+            <StarIcon size={14} weight="fill" color="#FFD83D" />
+            <StarIcon size={14} weight="fill" color="#FFD83D" />
+            <StarHalfIcon size={14} weight="fill" color="#FFD83D" />
+            <StarIcon size={14} weight="regular" color="#FFD83D" />
+            <Text className="font-poppins text-[14px]">3.5</Text>
+          </View>
           <Text className="text-2xl text-textSecondary font-poppins font-bold mt-4">
             {product.title}
           </Text>
 
-          <Text className="text-surface rounded-md w-[42px] h-[18px] bg-secondary-500 text-[12px] text-center justify-center border-b-2 border-r-2 border-black">
+          <Text className="text-surface rounded-md w-[42px] h-[18px] mb-2 bg-secondary-500 text-[12px] text-center justify-center border-b-2 border-r-2 border-black">
             ₹ {product.price}
           </Text>
 
