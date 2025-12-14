@@ -11,7 +11,7 @@ export default function CartPage() {
   if (cart.length === 0) {
     return (
       <View className="flex-1  items-center bg-background-950">
-        <BackAppBar title="Cart" />
+        <BackAppBar title="Cart"/>
         <Text className="text-lg text-gray-500">Your cart is empty.</Text>
       </View>
     );
