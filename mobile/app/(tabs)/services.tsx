@@ -68,7 +68,7 @@ export default function Explore() {
                   className="text-textSecondary text-[12px] font-bold font-poppins"
                   style={{
                     position: "absolute",
-                    left: 82,
+                    right: 16,
                     top: 177,
                   }}
                 >

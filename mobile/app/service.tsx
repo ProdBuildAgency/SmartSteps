@@ -26,17 +26,18 @@ const Service = () => {
     const whatsappMessage = card.customWhatsAppMessage || `Hello, I am interested in ${card.title}`;
 
     const openWhatsApp = async () => {
-        const url = `https://wa.me/${phoneNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-            whatsappMessage
-        )}`;
-        const supported = await Linking.canOpenURL(url);
-        if (supported) {
-            Linking.openURL(url);
-        } else {
+        const phone = phoneNumber.replace(/[^0-9]/g, '');
+        const url = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(whatsappMessage)}`;
+
+        try {
+            await Linking.openURL(url);
+        } catch (e) {
             setAlertMessage("WhatsApp is not installed on this device.");
             setAlertVisible(true);
         }
     };
+
+
 
     const openPhoneDialer = async () => {
         const url = `tel:${phoneNumber}`;

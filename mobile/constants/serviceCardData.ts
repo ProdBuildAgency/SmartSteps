@@ -7,6 +7,8 @@ import {
     HeadsetIcon
 } from 'phosphor-react-native';
 
+const SUPPORT_PHONE = process.env.EXPO_PUBLIC_SUPPORT_PHONE || "+910000000000";
+
 export const serviceCardData = [
     {
         title: "Smart Training",
@@ -14,7 +16,7 @@ export const serviceCardData = [
         text2: "To get access to Smart Training, reach us through WhatsApp or a direct call. We’re happy to assist you.",
         customWhatsAppMessage: "",
         icon: ChalkboardTeacherIcon,
-        phoneNumber: "+910000000000"
+        phoneNumber: SUPPORT_PHONE
     },
     {
         title: "Smart Branding & Marketing",
@@ -22,7 +24,7 @@ export const serviceCardData = [
         text2: "To unlock Branding & Marketing services, connect with us via WhatsApp or call. Our team will guide you ahead.",
         customWhatsAppMessage: "",
         icon: TrendUpIcon,
-        phoneNumber: "+910000000000"
+        phoneNumber: SUPPORT_PHONE
     },
     {
         title: "Smart CCTV Provision",
@@ -30,7 +32,7 @@ export const serviceCardData = [
         text2: "To enable CCTV Provision services, simply reach out to us on WhatsApp or call. We’ll assist you with the setup.",
         customWhatsAppMessage: "",
         icon: SecurityCameraIcon,
-        phoneNumber: "+910000000000"
+        phoneNumber: SUPPORT_PHONE
     },
     {
         title: "Preschool Event Support",
@@ -38,7 +40,7 @@ export const serviceCardData = [
         text2: "To access Events Support services, contact us anytime through WhatsApp or phone. We’re ready to help.",
         customWhatsAppMessage: "",
         icon: CalendarCheckIcon,
-        phoneNumber: "+910000000000"
+        phoneNumber: SUPPORT_PHONE
     },
     {
         title: "Personalized Stationary",
@@ -46,7 +48,7 @@ export const serviceCardData = [
         text2: "To order Personalized Stationary, share your school details and preferences with us via WhatsApp or call. We’ll create the perfect set for your preschool.",
         customWhatsAppMessage: "",
         icon: BooksIcon,
-        phoneNumber: "+910000000000"
+        phoneNumber: SUPPORT_PHONE
     },
 
     {
@@ -55,7 +57,7 @@ export const serviceCardData = [
         text2: "You can message us on WhatsApp or call directly—our team will respond immediately.",
         customWhatsAppMessage: "",
         icon: HeadsetIcon,
-        phoneNumber: "+910000000000"
+        phoneNumber: SUPPORT_PHONE
     },
 ];
 
