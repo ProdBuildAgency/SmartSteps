@@ -137,11 +137,21 @@ export default function ProductPage() {
             <Text className="text-[16px] font-Poppins_600SemiBold text-textSecondary">
               Similar Products
             </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-2">
-              {similarProducts.map((p) => (
-                <ProductCard key={p.id} product={p} />
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="mt-2"
+            >
+              {similarProducts.map((p, index) => (
+                <View
+                  key={p.id}
+                  className={index === 0 ? "mr-3" : "mx-3"}
+                >
+                  <ProductCard product={p} />
+                </View>
               ))}
             </ScrollView>
+
           </View>
         </View>
       </ScrollView>
@@ -198,29 +208,32 @@ export default function ProductPage() {
         {/* Cart button with View Cart label */}
         <TouchableOpacity
           className={`flex-row items-center justify-center border-2 border-secondary-500 rounded-lg h-[48px] ml-2 
-    ${getCartCount() > 0 ? "w-[148px]" : "w-[80px]"}`}
+  ${cartItem ? "w-[148px]" : "w-[80px]"}`}
           onPress={() => router.push("/cart")}
         >
-          <ShoppingCartSimpleIcon size={24} color="#1E2A38" weight="fill" />
+          {/* Icon wrapper */}
+          <View className="relative">
+            <ShoppingCartSimpleIcon size={24} color="#1E2A38" weight="fill" />
 
-          {getCartCount() > 0 && (
+            {/* Badge: show if ANY item exists */}
+            {getCartCount() > 0 && (
+              <View className="absolute -top-[6px] -right-[6px] bg-secondary-500 rounded-full w-[16px] h-[16px] items-center justify-center z-50 elevation-10">
+                <Text className="text-white text-[9px] font-bold">
+                  {getCartCount()}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* Text: ONLY if current product is in cart */}
+          {cartItem && (
             <Text className="text-primary-50 ml-2 font-poppins font-semibold">
               View Cart
             </Text>
           )}
-
-          {getCartCount() > 0 && (
-            <View
-              className={`absolute top-[6px] bg-secondary-500 rounded-full w-[14px] h-[14px] justify-center items-center ${getCartCount() > 0 ? "right-[33.6px]" : "right-[101px]"
-                }`}
-            >
-              <Text className="text-white text-[9px] font-bold">
-                {getCartCount()}
-              </Text>
-            </View>
-          )}
-
         </TouchableOpacity>
+
+
 
       </View>
 

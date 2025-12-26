@@ -9,8 +9,8 @@ export default function Home() {
 
   return (
     <View className="flex-1 items-center gap-3 bg-background-950">
-      <AppBar title="SMART STORE"/>
-      <Text className="text-h1 text-text-100 font-bold">Home</Text>
+      <AppBar title="SmartSteps"/>
+      
       {user && (
         <Text className="text-h3 text-text-100">Welcome, {user.name}</Text>
       )}

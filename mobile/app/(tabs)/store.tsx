@@ -30,27 +30,33 @@ export default function StorePage() {
   const [activeTab, setActiveTab] = useState("all");
 
 
-const filteredProducts = products.filter((item) => {
-  const q = searchQuery.toLowerCase();
+  const filteredProducts = products.filter((item) => {
+    const q = searchQuery.toLowerCase();
 
-  const matchesTitle = item.title?.toLowerCase()?.includes(q);
+    const matchesTitle = item.title?.toLowerCase()?.includes(q);
 
-  const matchesCategoryName =
-    item.category?.name?.toLowerCase()?.includes(q);
+    const matchesCategoryName =
+      item.category?.name?.toLowerCase()?.includes(q);
 
-  const matchesTags = item.tags?.some((tag: any) =>
-    tag.name?.toLowerCase()?.includes(q)
-  );
+    const matchesTags = item.tags?.some((tag: any) =>
+      tag.name?.toLowerCase()?.includes(q)
+    );
 
-  const matchesSearch =
-    matchesTitle || matchesCategoryName || matchesTags;
+    const matchesSearch =
+      matchesTitle || matchesCategoryName || matchesTags;
 
-  const matchesCategory =
-    activeTab === "all" ||
-    item.category?.name?.toLowerCase() === activeTab.toLowerCase();
+    const matchesCategory =
+      activeTab === "all" ||
+      item.category?.name?.toLowerCase() === activeTab.toLowerCase();
 
-  return matchesSearch && matchesCategory;
-});
+    return matchesSearch && matchesCategory;
+  });
+
+  const noResults =
+    !loading &&
+    !error &&
+    filteredProducts.length === 0 &&
+    searchQuery.trim().length > 0;
 
 
   return (
@@ -58,14 +64,16 @@ const filteredProducts = products.filter((item) => {
       <AppBar title="Smart Store" />
 
       {/* Search Bar and Cart */}
-      <View className="flex-row justify-between items-center p-4 m-[16px]">
-        <View className="flex-row items-center justify-center w-[304px] h-[48px] px-4 mr-3 border-2 border-black bg-white rounded-2xl">
-          <MagnifyingGlassIcon size={20} color="#5F6C7B" weight="bold" />
+      <View className="flex-row justify-between  items-center p-4 gap-6">
+        <View className="flex-row items-center justify-items-center min-w-[300px] gap-2 border-2 border-black bg-white rounded-2xl">
+          <View className="pl-4">
+            <MagnifyingGlassIcon size={24} color="#FFD83D" weight="bold" />
+          </View>
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder={`Search for "Curriculum"`}
-            className="flex-1 ml-2 text-[16px] text-textSecondary font-poppins"
+            className="text-textSecondary text-body "
             placeholderTextColor="#6B7280"
           />
         </View>
@@ -133,7 +141,7 @@ const filteredProducts = products.filter((item) => {
 
       {/* Product Grid */}
       <ScrollView className="flex-1 w-full bg-background-950">
-        <View className="flex-1 p-3">
+        <View className="flex-1 p-3 items-center justify-items-center">
           {/* Loading */}
           {loading && (
             <View className="mt-10 items-center">
@@ -146,30 +154,41 @@ const filteredProducts = products.filter((item) => {
             <Text className="text-red-500 text-center mt-6">{error}</Text>
           )}
 
-          {/* Product List */}
-          <View className="flex-row flex-wrap">
-            {!loading &&
-              filteredProducts.map((product, index) => {
-                const isAllTab = activeTab === "all";
+          {/* Product List OR No Results */}
+          {noResults ? (
+            <View className="mt-20 items-center justify-center px-6 ">
+              <Text className="text-primary-50 font-poppins font-bold text-[22px]">
+                No Result Found
+              </Text>
+              <Text className="text-textSecondary font-poppins text-center mt-2 text-[16px]">
+                Please check your spelling or try a different keyword.
+              </Text>
+            </View>
+          ) : (
 
-                return (
-                  <View
-                    key={product.id}
-                    className={
-                      isAllTab
-                        ? `w-[48%] mb-4 ${index % 2 !== 0 ? "ml-4" : ""}`
-                        : `w-full mb-4`
-                    }
-                  >
-                    {isAllTab ? (
-                      <ProductCard product={product} />
-                    ) : (
-                      <ProductCardHorizontal product={product} />
-                    )}
-                  </View>
-                );
-              })}
+          <View className="w-full items-center justify-items-center">
+            <View className="flex-row flex-wrap justify-start w-full">
+              {!loading &&
+                filteredProducts.map((product, index) => {
+                  const isAllTab = activeTab === "all";
+
+                  return (
+                    <View
+                      key={product.id}
+                      className="gap-4"
+                    >
+                      {isAllTab ? (
+                        <ProductCard product={product} />
+                      ) : (
+                        <ProductCardHorizontal product={product} />
+                      )}
+                    </View>
+                  );
+                })}
+            </View>
           </View>
+          )}
+
         </View>
       </ScrollView>
     </View>

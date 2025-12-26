@@ -5,6 +5,7 @@ import { EyeClosedIcon, EyeIcon } from "phosphor-react-native";
 interface CustomInputProps extends React.ComponentProps<typeof TextInput> {
   label: string;
   required?: boolean;
+  isEmail?: boolean;
 }
 
 export default function CustomInput({
@@ -31,9 +32,16 @@ export default function CustomInput({
         <TextInput
           {...props}
           secureTextEntry={isPasswordField ? !isPasswordVisible : false}
-          className={`rounded-xl px-4 py-3 bg-white text-gray-900 border-2 border-black pr-10 placeholder:text-body`}
+          autoCapitalize={props.isEmail ? "none" : props.autoCapitalize}
+          keyboardType={props.isEmail ? "email-address" : props.keyboardType}
+          className="rounded-xl px-4 py-3 bg-white text-gray-900 border-2 border-black pr-10 placeholder:text-body"
           placeholderTextColor="#9CA3AF"
+          onChangeText={(text) => {
+            const value = props.isEmail ? text.toLowerCase() : text;
+            props.onChangeText?.(value);
+          }}
         />
+
 
         {isPasswordField && (
           <TouchableOpacity

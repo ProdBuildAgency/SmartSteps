@@ -31,6 +31,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       const storedToken = await SecureStore.getItemAsync("auth_token");
       const storedUser = await SecureStore.getItemAsync("auth_user");
 
+      console.log('user:' + storedUser);
+
       if (storedToken && storedUser) {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));

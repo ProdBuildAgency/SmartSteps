@@ -19,7 +19,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const { submitLogin, formData, updateFormData } = useLoginForm();
 
-  // ⬅️ Session context
+  // ⬅ Session context
   const { login } = useSession();
 
   const [alertVisible, setAlertVisible] = useState(false);
@@ -124,6 +124,7 @@ export default function LoginScreen() {
             required
             placeholder="Enter Email / Phone Number"
             value={formData.emailOrPhone}
+            isEmail= {true}
             onChangeText={(v) => updateFormData({ emailOrPhone: v })}
           />
 
