@@ -64,14 +64,16 @@ export default function StorePage() {
       <AppBar title="Smart Store" />
 
       {/* Search Bar and Cart */}
-      <View className="flex-row justify-between items-center p-4 m-[16px]">
-        <View className="flex-row items-center justify-center w-[304px] h-[48px] px-4 mr-3 border-2 border-black bg-white rounded-2xl">
-          <MagnifyingGlassIcon size={20} color="#5F6C7B" weight="bold" />
+      <View className="flex-row justify-between  items-center p-4 gap-6">
+        <View className="flex-row items-center justify-items-center min-w-[300px] gap-2 border-2 border-black bg-white rounded-2xl">
+          <View className="pl-4">
+            <MagnifyingGlassIcon size={24} color="#FFD83D" weight="bold" />
+          </View>
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder={`Search for "Curriculum"`}
-            className="flex-1 ml-2 text-[16px] text-textSecondary font-poppins"
+            className="text-textSecondary text-body "
             placeholderTextColor="#6B7280"
           />
         </View>
@@ -139,7 +141,7 @@ export default function StorePage() {
 
       {/* Product Grid */}
       <ScrollView className="flex-1 w-full bg-background-950">
-        <View className="flex-1 p-3">
+        <View className="flex-1 p-3 items-center justify-items-center">
           {/* Loading */}
           {loading && (
             <View className="mt-10 items-center">
@@ -163,7 +165,9 @@ export default function StorePage() {
               </Text>
             </View>
           ) : (
-            <View className="flex-row flex-wrap">
+
+          <View className="w-full items-center justify-items-center">
+            <View className="flex-row flex-wrap justify-start w-full">
               {!loading &&
                 filteredProducts.map((product, index) => {
                   const isAllTab = activeTab === "all";
@@ -171,11 +175,7 @@ export default function StorePage() {
                   return (
                     <View
                       key={product.id}
-                      className={
-                        isAllTab
-                          ? `w-[48%] mb-4 ${index % 2 !== 0 ? "ml-4" : ""}`
-                          : `w-full mb-4`
-                      }
+                      className="gap-4"
                     >
                       {isAllTab ? (
                         <ProductCard product={product} />
@@ -186,6 +186,7 @@ export default function StorePage() {
                   );
                 })}
             </View>
+          </View>
           )}
 
         </View>

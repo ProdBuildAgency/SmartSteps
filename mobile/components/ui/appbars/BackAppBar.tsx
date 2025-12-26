@@ -7,7 +7,7 @@ export function BackAppBar({ title }: { title: string }) {
   const router = useRouter();
 
   return (
-    <View className="bg-background-950 border-b border-primary-500 px-4 pt-[53px] pb-[8px] h-[100px] flex-row items-center">
+    <View className="bg-background-950 border-b border-primary-500 px-2 pt-[53px] pb-[8px] h-[100px] flex-row items-center">
       
       {/* Back button */}
       <TouchableOpacity onPress={() => router.back()} className="w-12 h-12 justify-center items-center">

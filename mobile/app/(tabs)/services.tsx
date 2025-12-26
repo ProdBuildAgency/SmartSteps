@@ -3,6 +3,7 @@ import React from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { serviceCards } from "@/constants";
+import { CaretLeftIcon, CaretRightIcon } from "phosphor-react-native";
 
 export default function Explore() {
   return (
@@ -33,7 +34,7 @@ export default function Explore() {
             return (
               <TouchableOpacity
                 onPress={() => router.push(`/service?title=${encodeURIComponent(item.title)}`)}
-                className="flex-1 w-[177px] h-[200px] flex-col bg-white rounded-2xl p-6 shadow-md shadow-black/10 items-center"
+                className="flex-1  flex-col bg-white rounded-2xl shadow-md shadow-black/10 items-center"
                 style={{
                   borderWidth: 2,
                   borderColor: iconColor,
@@ -44,36 +45,42 @@ export default function Explore() {
                   elevation: 6,
                 }}
               >
-                <View
-                  className="w-[48px] h-[48px] bg-background-950 rounded-md items-center justify-center"
-                  style={{
-                    shadowColor: "#000",
-                    shadowOpacity: 0.15,
-                    shadowOffset: { width: 0, height: 3 },
-                    shadowRadius: 6,
-                    elevation: 6,
-                  }}
-                >
+                <View className="flex items-center justify-items-center gap-2">
+                <View className="flex items-center justify-items-center pt-4 px-4 gap-2">
 
-                  <Icon size={32} weight="fill" color={iconColor} />
+                  <View
+                    className="w-[48px] h-[48px] bg-background-950 rounded-md items-center justify-center"
+                    style={{
+                      shadowColor: "#000",
+                      shadowOpacity: 0.15,
+                      shadowOffset: { width: 0, height: 3 },
+                      shadowRadius: 6,
+                      elevation: 6,
+                    }}
+                  >
+                    <Icon size={32} weight="fill" color={iconColor} />
+                  </View>
+                  <View className="flex items-center justify-items-center gap-1">
+                    <Text className="text-black text-center font-poppins font-semibold text-base">
+                      {item.title}
+                    </Text>
+                    <Text className="text-textSecondary text-center">
+                      {item.description}
+                    </Text>
+                  </View>
+
+                </View>
+                <View className="flex flex-row pb-4 items-center justify-end gap-1 w-full pr-4">
+
+                  <Text
+                    className="text-textSecondary text-[12px] font-bold font-poppins"
+                  >
+                    Learn More
+                  </Text>
+                  <CaretRightIcon size={11} color={iconColor}/>
                 </View>
 
-                <Text className="text-lg mt-[8px] w-[144px] h-[44px] leading-[22px] font-poppins text-black text-center text-[18px] font-bold">
-                  {item.title}
-                </Text>
-                <Text className="text-center justify-center text-[12px] w-[148px] h-[48px] text-textSecondary font-poppins">
-                  {item.description}
-                </Text>
-                <Text
-                  className="text-textSecondary text-[12px] font-bold font-poppins"
-                  style={{
-                    position: "absolute",
-                    right: 16,
-                    top: 177,
-                  }}
-                >
-                  Learn more {'>'}
-                </Text>
+                </View>
               </TouchableOpacity>
             );
           }}

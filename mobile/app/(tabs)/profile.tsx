@@ -3,6 +3,7 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useSession } from "@/contexts/SessionContext";
 import { useRouter } from "expo-router";
+import { AppBar } from "@/components/ui/appbars/AppBar";
 
 export default function Profile() {
   const { user, logout } = useSession();
@@ -14,8 +15,8 @@ export default function Profile() {
   };
 
   return (
-    <View className="flex-1 justify-center items-center bg-background-950 gap-3">
-      <Text className="text-h1 text-text-100 font-bold">Profile</Text>
+    <View className="flex-1 items-center bg-background-950 gap-3">
+      <AppBar title="Profile Page"/>
       
       {user && (
         <>

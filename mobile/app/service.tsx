@@ -82,29 +82,29 @@ const Service = () => {
                     </Text>
                 </View>
 
-                <Text className="mt-[32px] text-text-50 w-[370px] h-auto text-base text-center text-[16px] font-medium font-poppins">
+                <Text className="mt-[32px] px-2 text-text-50 w-[370px] h-auto text-base text-center text-[16px] font-medium font-poppins">
                     {card.text1}
                 </Text>
-                <Text className="mt-[16px] text-textSecondary w-[370px] h-auto text-base text-center">
+                <Text className="mt-[16px] px-2 text-textSecondary w-[370px] h-auto text-base text-center">
                     {card.text2}
                 </Text>
 
 
-                <View className="flex-row justify-center mt-6">
+                <View className="flex-row justify-center mt-6 px-2">
                     <TouchableOpacity
                         className="w-[177px] h-[44px] flex-row items-center justify-center bg-success rounded-full mr-4"
                         onPress={openWhatsApp}
                     >
-                        <WhatsappLogoIcon size={22} weight="fill" color="#fff" />
-                        <Text className="text-white text-base font-medium ml-2">WhatsApp</Text>
+                        <WhatsappLogoIcon size={28} weight="fill" color="#fff" />
+                        <Text className="text-white text-button ml-2">WhatsApp</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         className="w-[177px] h-[44px] flex-row items-center justify-center bg-primary-500 rounded-full"
                         onPress={openPhoneDialer}
                     >
-                        <PhoneCallIcon size={22} weight="fill" color="#fff" />
-                        <Text className="text-white text-base font-medium ml-2">Phone</Text>
+                        <PhoneCallIcon size={28} weight="fill" color="#fff" />
+                        <Text className="text-white text-button ml-2">Phone</Text>
                     </TouchableOpacity>
                 </View>
 
